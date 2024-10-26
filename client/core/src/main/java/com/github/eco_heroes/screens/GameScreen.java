@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eco_heroes.Main;
 import com.github.eco_heroes.actors.*;
 
+import java.awt.*;
 import java.util.Random;
 
 public class GameScreen implements Screen {
@@ -17,10 +18,16 @@ public class GameScreen implements Screen {
     Random random;
     private final Stage stage;
 
+    private Array<TrashContainerElement> containers;
+
     Texture bottleTexture;
     Texture jugTexture;
     Texture blueContainerTexture;
+    Texture yellowContainerTexture;
     Array<TrashElement> trashElements;
+    PlasticBottle bottle;
+    BlueContainer blueContainer;
+    YellowContainer yellowContainer;
 
 
     public GameScreen(final Main game){
@@ -28,25 +35,35 @@ public class GameScreen implements Screen {
         random = new Random();
         Gdx.input.setInputProcessor(stage);
 
+        containers = new Array<TrashContainerElement>();
+
         //Textures
         //--TrashItems
         bottleTexture = new Texture("plastic_bottle.png");
         jugTexture = new Texture("plastic_jug.png");
         //--Containers
         blueContainerTexture = new Texture("container_blue.png");
+        yellowContainerTexture = new Texture("container_yellow.png");
 
         //Actors
-        TrashElement bottle = new PlasticBottle(bottleTexture);
-        bottle.setPosition(100, 100);
-        TrashElement jug = new PlasticJug(jugTexture);
-        bottle.setPosition(200, 100);
-        TrashContainerElement blueContainer = new BlueContainer(blueContainerTexture);
+        blueContainer = new BlueContainer(blueContainerTexture, 300, 100);
         blueContainer.setPosition(300, 100);
+        yellowContainer = new YellowContainer(yellowContainerTexture, 500, 100);
+        yellowContainer.setPosition(500, 100);
+
+        containers.add(blueContainer);
+        containers.add(yellowContainer);
+
+        bottle = new PlasticBottle(bottleTexture, 100, 100, blueContainer, containers);
+        bottle.setPosition(100, 100);
+        TrashElement jug = new PlasticJug(jugTexture, 200, 100, yellowContainer, containers);
+        jug.setPosition(200, 100);
 
         //stage
+        stage.addActor(blueContainer);
+        stage.addActor(yellowContainer);
         stage.addActor(bottle);
         stage.addActor(jug);
-        stage.addActor(blueContainer);
     }
 
     private void spawnTrashItem() {
@@ -82,7 +99,7 @@ public class GameScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        spawnTrashItem();
+        //spawnTrashItem();
     }
 
 
