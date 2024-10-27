@@ -10,7 +10,7 @@ type PingService struct {
 	pb.UnimplementedPingerServer
 }
 
-func (s *PingService) Ping(_ context.Context, req *pb.PingRequest) (*pb.PingReply, error) {
+func (s *PingService) Ping(_ context.Context, in *pb.PingRequest) (*pb.PingReply, error) {
 	return &pb.PingReply{Message: "Ping!"}, nil
 }
 
