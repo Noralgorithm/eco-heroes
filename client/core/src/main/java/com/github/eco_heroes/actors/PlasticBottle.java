@@ -1,24 +1,34 @@
 package com.github.eco_heroes.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Array;
+import com.github.eco_heroes.screens.GameScreen;
+import com.github.eco_heroes.utils.GameState;
 
 import java.awt.*;
 
 public class PlasticBottle extends TrashElement {
-    private TrashContainerElement container;
-    private Array<TrashContainerElement> containers;
+    private final TrashContainerElement correctContainer;
+    private Action movement;
 
-    public PlasticBottle(Texture texture, int x, int y, TrashContainerElement container, Array<TrashContainerElement> containers) {
+    public PlasticBottle(Texture texture, int x, int y, TrashContainerElement correctContainer, Array<TrashContainerElement> containers) {
         super(texture, "PLASTIC_BOTTLE", new Rectangle(x, y, texture.getWidth(), texture.getHeight()), x, y);
-        this.container = container;
+        this.correctContainer = correctContainer;
         this.containers = containers;
+        isDragging = false;
 
         addListener(new DragListener() {
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
+                System.out.println(getX());
+                originalX = (int) getX();
+                isDragging = true;
+                clearActions();
+
                 int newX = (int) (event.getStageX() - getWidth() / 2);
                 int newY = (int) (event.getStageY() - getHeight() / 2);
 
@@ -28,25 +38,20 @@ public class PlasticBottle extends TrashElement {
 
             @Override
             public void dragStop(InputEvent event, float x, float y, int pointer) {
+                isDragging = false;
+
                 if (droppedOverNothing()){
+                    System.out.println(originalX+"lala"+originalY);
                     setPosition(originalX, originalY);
-                } else if (getBounds().intersects(container.getBounds())) {
+                } else if (getBounds().intersects(correctContainer.getBounds())) {
                     System.out.println("¡La botella ha sido colocada en el contenedor!");
                     remove();
                 } else {
                     System.out.println("Te equivocaste >:(");
+                    GameState.getInstance().loseLife();
                     remove();
                 };
             }
         });
-    }
-
-    private boolean droppedOverNothing(){
-        for (TrashContainerElement container : containers) {
-            if (getBounds().intersects(container.getBounds())) {
-                return false;
-            }
-        }
-        return true;
     }
 };
