@@ -1,0 +1,18 @@
+syntax = 'proto3';
+
+option go_package = './gameevents';
+
+package ecoheroes;
+
+message Room {
+  string id = 1;
+}
+
+message ServerEvent {
+// TODO: Make this an enum.
+  string type = 1;
+}
+
+service GameEvents {
+  rpc subscribe(Room) returns (stream ServerEvent);
+}
