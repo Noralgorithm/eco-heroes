@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Array;
+import com.github.eco_heroes.utils.GameState;
 
 import java.awt.*;
 
@@ -43,10 +44,10 @@ public class PlasticJug extends TrashElement {
                     setPosition(originalX, originalY);
                 } else if (getBounds().intersects(correctContainer.getBounds())) {
                     System.out.println("¡La jug ha sido colocada en el contenedor!");
-
                     remove();
                 } else {
                     System.out.println("Te equivocaste >:(");
+                    GameState.getInstance().loseLife();
                     remove();
                 };
             }

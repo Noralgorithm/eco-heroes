@@ -1,5 +1,7 @@
 package com.github.eco_heroes.utils;
 
+import com.github.eco_heroes.screens.GameScreen;
+
 public class GameState {
     private static GameState instance;
     private int lives;

@@ -121,6 +121,11 @@ public class GameScreen implements Screen {
             spawnTrashItem();
 
         game.batch.end();
+
+        if (GameState.getInstance().getLives() <= 0) {
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
     }
 
 
