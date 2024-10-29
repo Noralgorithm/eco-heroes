@@ -1,10 +1,11 @@
 package services
 
 import (
-	pb "github.com/eco-heroes/server/proto/gameevents"
-	"google.golang.org/grpc"
 	"strconv"
 	"time"
+
+	pb "github.com/eco-heroes/server/proto/gameevents"
+	"google.golang.org/grpc"
 )
 
 type GameEventsService struct {
@@ -12,24 +13,27 @@ type GameEventsService struct {
 }
 
 func (s *GameEventsService) Subscribe(room *pb.Room, stream grpc.ServerStreamingServer[pb.ServerEvent]) error {
-	err := make(chan error)
+	errCh := make(chan error)
 
 	pool := GetConnPoolInstance()
 
-	conn := pool.Add(room, stream)
+	conn, err := pool.Add(room.Id, stream)
 
-	go listenAndHandleEvents(conn, err)
+	if err != nil {
+		return err
+	}
 
+	go listenAndHandleEvents(conn, errCh)
 	go debugEvents(pool)
 
-	return <-err
+	return <-errCh
 }
 
 func debugEvents(cp *ConnectionsPool) {
 	i := 0
 	for {
 		time.Sleep(1000 * time.Millisecond)
-		cp.Roomcast("1", &pb.ServerEvent{Type: "Test :3 " + strconv.Itoa(i)})
+		cp.Roomcast("hola", &pb.ServerEvent{Type: "Test :3 " + strconv.Itoa(i)})
 		i++
 	}
 }
