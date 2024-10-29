@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+
+	"google.golang.org/grpc/reflection"
 
 	"google.golang.org/grpc"
 )
