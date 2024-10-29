@@ -35,7 +35,6 @@ func (cp *ConnectionsPool) Add(roomId string, stream grpc.ServerStreamingServer[
 	}
 
 	r := cp.rooms[roomIdx]
-
 	p := r.CreateNewPlayer()
 
 	conn := &Connection{
