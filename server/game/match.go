@@ -1,8 +1,8 @@
 package game
 
 var (
-	INITIAL_SCORE = 0
-	INITIAL_LIVES = 3
+	InitialScore = 0
+	InitialLives = 3
 )
 
 type Match struct {
@@ -14,8 +14,8 @@ type Match struct {
 func NewMatch(p Player) Match {
 	m := Match{
 		Player: p,
-		Score:  INITIAL_SCORE,
-		Lives:  INITIAL_LIVES,
+		Score:  InitialScore,
+		Lives:  InitialLives,
 	}
 
 	return m

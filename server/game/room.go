@@ -1,7 +1,7 @@
 package game
 
 var (
-	INITIAL_SPEED = 1
+	InitialSpeed = 1
 )
 
 type Room struct {
@@ -11,7 +11,7 @@ type Room struct {
 }
 
 func NewRoom() Room {
-	return Room{Id: "hola", Matches: []Match{}, Speed: INITIAL_SPEED}
+	return Room{Id: "hola", Matches: []Match{}, Speed: InitialSpeed}
 }
 
 func (r *Room) CreateNewPlayer() Player {

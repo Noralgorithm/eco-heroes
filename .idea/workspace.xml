@@ -5,17 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f49e461-109a-4a13-9655-38041697fc6d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/proto/compile.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proto/game-events.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/game/match.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/game/player.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/game/room.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/services/connections-pool.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/services/game-events.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/register-services.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/register-services.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/services/hello-world.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/services/hello-world.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/services/ping.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/services/ping.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/game/match.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/game/match.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/game/room.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/game/room.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
