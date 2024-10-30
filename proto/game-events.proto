@@ -7,8 +7,8 @@ option java_outer_classname = "GameEventsProto";
 
 package ecoheroes;
 
-message Room {
-  string id = 1;
+message SubscriptionRequest {
+  string roomId = 1;
 }
 
 message ServerEvent {
@@ -17,5 +17,5 @@ message ServerEvent {
 }
 
 service GameEvents {
-  rpc subscribe(Room) returns (stream ServerEvent);
+  rpc subscribe(SubscriptionRequest) returns (stream ServerEvent);
 }

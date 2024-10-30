@@ -12,12 +12,12 @@ type GameEventsService struct {
 	pb.UnimplementedGameEventsServer
 }
 
-func (s *GameEventsService) Subscribe(room *pb.Room, stream grpc.ServerStreamingServer[pb.ServerEvent]) error {
+func (s *GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.ServerStreamingServer[pb.ServerEvent]) error {
 	errCh := make(chan error)
 
 	pool := GetConnPoolInstance()
 
-	conn, err := pool.Add(room.Id, stream)
+	conn, err := pool.Add(sr.RoomId, stream)
 
 	if err != nil {
 		return err

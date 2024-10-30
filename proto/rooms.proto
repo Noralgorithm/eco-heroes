@@ -1,9 +1,29 @@
 syntax = 'proto3';
 
-option go_package = './gameevents';
+option go_package = './rooms';
 option java_multiple_files = true;
 option java_package = "com.github.eco_heroes.proto.rooms";
 option java_outer_classname = "RoomsProto";
 
 package ecoheroes;
 
+import 'void.proto';
+
+message RoomDataReply {
+  string id = 1;
+  repeated PlayerInRoomData players = 2;
+  int32 playersLimit = 3;
+}
+
+message JoinRequest {
+  string roomId = 1;
+}
+
+message PlayerInRoomData {
+  int32 number = 1;
+}
+
+service Rooms {
+  rpc createAndJoin(JoinRequest) returns (RoomDataReply);
+  rpc join(JoinRequest) returns (RoomDataReply);
+}
