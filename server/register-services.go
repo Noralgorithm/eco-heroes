@@ -6,8 +6,6 @@ import (
 )
 
 var registrableServices []RegistrableService = []RegistrableService{
-	&services.GreeterService{},
-	&services.PingService{},
 	&services.GameEventsService{},
 }
 
