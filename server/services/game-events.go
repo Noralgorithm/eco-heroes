@@ -21,7 +21,7 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 		return errors.New("room not found")
 	}
 
-	player := room.FindPlayer(int(sr.PlayerNumber))
+	player, _ := room.FindPlayer(int(sr.PlayerNumber))
 	if player == nil {
 		return errors.New("player not found")
 	}

@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	"errors"
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"github.com/google/uuid"
 )
@@ -40,16 +40,30 @@ func (r *Room) AddPlayer() *Player {
 	return &newPlayer
 }
 
-func (r *Room) FindPlayer(playerNumber int) *Player {
-	fmt.Println(playerNumber)
-	fmt.Println(r.Players)
+func (r *Room) RemovePlayer(playerNumber int) error {
+	player, index := r.FindPlayer(playerNumber)
 
-	for _, player := range r.Players {
+	if player == nil {
+		return errors.New("player not found")
+	}
+
+	r.Players = append(r.Players[:index], r.Players[index+1:]...)
+
+	for i := index; i < len(r.Players); i++ {
+		r.Players[i].Number = i + 1
+	}
+
+	return nil
+}
+
+func (r *Room) FindPlayer(playerNumber int) (*Player, int) {
+
+	for i, player := range r.Players {
 		if player.Number == playerNumber {
-			return &player
+			return &player, i
 		}
 	}
-	return nil
+	return nil, 0
 }
 
 func (r *Room) Notify(evt *pb.ServerEvent) {
