@@ -27,13 +27,16 @@ func CreateRoom() *Room {
 	return &newRoom
 }
 
-// TODO: Logic to assign player number
+// TODO LOGIC TO ASSIGN PLAYER NUMBER
+// TODO: add validation for when you want to join a room and you already have the limit of players.
 func (r *Room) AddPlayer() *Player {
+
 	newPlayer := Player{
-		Number: 27,
+		Number: len(r.Players) + 1,
 	}
 
 	r.Players = append(r.Players, newPlayer)
+
 	return &newPlayer
 }
 

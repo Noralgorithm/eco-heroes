@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"github.com/eco-heroes/server/game"
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"google.golang.org/grpc"
@@ -22,7 +21,6 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 		return errors.New("room not found")
 	}
 
-	fmt.Println(sr.PlayerNumber, int(sr.PlayerNumber))
 	player := room.FindPlayer(int(sr.PlayerNumber))
 	if player == nil {
 		return errors.New("player not found")
