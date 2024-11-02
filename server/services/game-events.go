@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+
 	"github.com/eco-heroes/server/game"
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"google.golang.org/grpc"
@@ -24,15 +25,17 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 		return errors.New("player not found")
 	}
 
+	go func() {
+		room.Notify(&pb.ServerEvent{Type: pb.Type_PLAYER_ADDED})
+	}()
+
 	connectedPlayer, err := player.Subscribe(stream)
+
 	if err != nil {
 		return err
 	}
 
 	go listenAndHandleEvents(&connectedPlayer.Connection, errCh)
-	go func() {
-		room.Notify(&pb.ServerEvent{Type: pb.Type_PLAYER_ADDED})
-	}()
 	//go debugEvents(player)
 
 	return <-errCh

@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"google.golang.org/grpc"
 )
@@ -25,5 +27,13 @@ func (p *Player) Subscribe(stream grpc.ServerStreamingServer[pb.ServerEvent]) (*
 }
 
 func (p *Player) Notify(evt *pb.ServerEvent) {
+	fmt.Println("notify", p, evt)
+
+	if p.Connection.Channel == nil {
+		return
+	}
+
+	fmt.Println("sending event", p, evt)
+
 	p.Connection.Channel <- evt
 }

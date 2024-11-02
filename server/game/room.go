@@ -2,6 +2,7 @@ package game
 
 import (
 	"errors"
+
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"github.com/google/uuid"
 )
@@ -13,12 +14,12 @@ var (
 type Room struct {
 	Id      uuid.UUID
 	Matches []Match
-	Players []Player
+	Players []*Player
 	Speed   int
 }
 
 func NewRoom() Room {
-	return Room{Id: uuid.New(), Players: []Player{}, Matches: []Match{}, Speed: InitialSpeed}
+	return Room{Id: uuid.New(), Players: []*Player{}, Matches: []Match{}, Speed: InitialSpeed}
 }
 
 func CreateRoom() *Room {
@@ -33,7 +34,7 @@ func (r *Room) AddPlayer() *Player {
 		Number: len(r.Players) + 1,
 	}
 
-	r.Players = append(r.Players, newPlayer)
+	r.Players = append(r.Players, &newPlayer)
 
 	return &newPlayer
 }
@@ -58,7 +59,7 @@ func (r *Room) FindPlayer(playerNumber int) (*Player, int) {
 
 	for i, player := range r.Players {
 		if player.Number == playerNumber {
-			return &player, i
+			return player, i
 		}
 	}
 	return nil, 0
