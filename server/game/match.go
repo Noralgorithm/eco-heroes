@@ -6,14 +6,14 @@ var (
 )
 
 type Match struct {
-	Player Player
+	Player *Player
 	Score  int
 	Lives  int
 }
 
 func NewMatch(p Player) Match {
 	m := Match{
-		Player: p,
+		Player: &p,
 		Score:  InitialScore,
 		Lives:  InitialLives,
 	}

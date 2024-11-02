@@ -7,7 +7,11 @@
 package rooms
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,10 +19,19 @@ import (
 // Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
+const (
+	Rooms_CreateAndJoin_FullMethodName = "/ecoheroes.Rooms/createAndJoin"
+	Rooms_Join_FullMethodName          = "/ecoheroes.Rooms/join"
+	Rooms_Fetch_FullMethodName         = "/ecoheroes.Rooms/fetch"
+)
+
 // RoomsClient is the client API for Rooms service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RoomsClient interface {
+	CreateAndJoin(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RoomDataReply, error)
+	Join(ctx context.Context, in *JoinRequest, opts ...grpc.CallOption) (*RoomDataReply, error)
+	Fetch(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RoomsListReply, error)
 }
 
 type roomsClient struct {
@@ -29,10 +42,43 @@ func NewRoomsClient(cc grpc.ClientConnInterface) RoomsClient {
 	return &roomsClient{cc}
 }
 
+func (c *roomsClient) CreateAndJoin(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RoomDataReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoomDataReply)
+	err := c.cc.Invoke(ctx, Rooms_CreateAndJoin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roomsClient) Join(ctx context.Context, in *JoinRequest, opts ...grpc.CallOption) (*RoomDataReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoomDataReply)
+	err := c.cc.Invoke(ctx, Rooms_Join_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roomsClient) Fetch(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RoomsListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoomsListReply)
+	err := c.cc.Invoke(ctx, Rooms_Fetch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RoomsServer is the server API for Rooms service.
 // All implementations must embed UnimplementedRoomsServer
 // for forward compatibility.
 type RoomsServer interface {
+	CreateAndJoin(context.Context, *emptypb.Empty) (*RoomDataReply, error)
+	Join(context.Context, *JoinRequest) (*RoomDataReply, error)
+	Fetch(context.Context, *emptypb.Empty) (*RoomsListReply, error)
 	mustEmbedUnimplementedRoomsServer()
 }
 
@@ -43,6 +89,15 @@ type RoomsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRoomsServer struct{}
 
+func (UnimplementedRoomsServer) CreateAndJoin(context.Context, *emptypb.Empty) (*RoomDataReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAndJoin not implemented")
+}
+func (UnimplementedRoomsServer) Join(context.Context, *JoinRequest) (*RoomDataReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Join not implemented")
+}
+func (UnimplementedRoomsServer) Fetch(context.Context, *emptypb.Empty) (*RoomsListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Fetch not implemented")
+}
 func (UnimplementedRoomsServer) mustEmbedUnimplementedRoomsServer() {}
 func (UnimplementedRoomsServer) testEmbeddedByValue()               {}
 
@@ -64,13 +119,80 @@ func RegisterRoomsServer(s grpc.ServiceRegistrar, srv RoomsServer) {
 	s.RegisterService(&Rooms_ServiceDesc, srv)
 }
 
+func _Rooms_CreateAndJoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoomsServer).CreateAndJoin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Rooms_CreateAndJoin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoomsServer).CreateAndJoin(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Rooms_Join_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JoinRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoomsServer).Join(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Rooms_Join_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoomsServer).Join(ctx, req.(*JoinRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Rooms_Fetch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoomsServer).Fetch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Rooms_Fetch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoomsServer).Fetch(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Rooms_ServiceDesc is the grpc.ServiceDesc for Rooms service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Rooms_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ecoheroes.Rooms",
 	HandlerType: (*RoomsServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "rooms.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "createAndJoin",
+			Handler:    _Rooms_CreateAndJoin_Handler,
+		},
+		{
+			MethodName: "join",
+			Handler:    _Rooms_Join_Handler,
+		},
+		{
+			MethodName: "fetch",
+			Handler:    _Rooms_Fetch_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "rooms.proto",
 }

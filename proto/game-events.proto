@@ -9,6 +9,7 @@ package ecoheroes;
 
 message SubscriptionRequest {
   string roomId = 1;
+  int32 playerNumber = 2;
 }
 
 message ServerEvent {

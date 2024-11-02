@@ -1,48 +1,57 @@
 package services
 
 import (
-	"strconv"
-	"time"
-
+	"errors"
+	"fmt"
+	"github.com/eco-heroes/server/game"
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"google.golang.org/grpc"
+	"strconv"
+	"time"
 )
 
 type GameEventsService struct {
 	pb.UnimplementedGameEventsServer
 }
 
-func (s *GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.ServerStreamingServer[pb.ServerEvent]) error {
+func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.ServerStreamingServer[pb.ServerEvent]) error {
 	errCh := make(chan error)
 
-	pool := GetConnPoolInstance()
+	room := game.FindActiveRoom(sr.RoomId)
+	if room == nil {
+		return errors.New("room not found")
+	}
 
-	conn, err := pool.Add(sr.RoomId, stream)
+	fmt.Println(sr.PlayerNumber, int(sr.PlayerNumber))
+	player := room.FindPlayer(int(sr.PlayerNumber))
+	if player == nil {
+		return errors.New("player not found")
+	}
 
+	connectedPlayer, err := player.Subscribe(stream)
 	if err != nil {
 		return err
 	}
 
-	go listenAndHandleEvents(conn, errCh)
-	go debugEvents(pool)
+	go listenAndHandleEvents(&connectedPlayer.Connection, errCh)
+	go debugEvents(connectedPlayer)
 
 	return <-errCh
 }
 
-func debugEvents(cp *ConnectionsPool) {
+func debugEvents(player *game.Player) {
 	i := 0
 	for {
 		time.Sleep(1000 * time.Millisecond)
-		cp.Roomcast("hola", &pb.ServerEvent{Type: "Test :3 " + strconv.Itoa(i)})
+		player.Notify(&pb.ServerEvent{Type: "Test :3 " + strconv.Itoa(i)})
 		i++
 	}
 }
 
-func listenAndHandleEvents(conn *Connection, errCh chan error) {
+func listenAndHandleEvents(conn *game.Connection, errCh chan error) {
 	for {
-		event := <-conn.channel
-
-		err := conn.stream.Send(event)
+		event := <-conn.Channel
+		err := conn.Stream.Send(event)
 
 		if err != nil {
 			errCh <- err
