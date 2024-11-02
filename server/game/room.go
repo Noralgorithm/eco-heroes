@@ -27,8 +27,6 @@ func CreateRoom() *Room {
 	return &newRoom
 }
 
-// TODO LOGIC TO ASSIGN PLAYER NUMBER
-// TODO: add validation for when you want to join a room and you already have the limit of players.
 func (r *Room) AddPlayer() *Player {
 
 	newPlayer := Player{

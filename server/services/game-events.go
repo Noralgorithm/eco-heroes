@@ -5,8 +5,6 @@ import (
 	"github.com/eco-heroes/server/game"
 	pb "github.com/eco-heroes/server/proto/gameevents"
 	"google.golang.org/grpc"
-	"strconv"
-	"time"
 )
 
 type GameEventsService struct {
@@ -32,19 +30,22 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 	}
 
 	go listenAndHandleEvents(&connectedPlayer.Connection, errCh)
-	go debugEvents(connectedPlayer)
+	go func() {
+		room.Notify(&pb.ServerEvent{Type: pb.Type_PLAYER_ADDED})
+	}()
+	//go debugEvents(player)
 
 	return <-errCh
 }
 
-func debugEvents(player *game.Player) {
+/*func debugEvents(player *game.Player) {
 	i := 0
 	for {
 		time.Sleep(1000 * time.Millisecond)
-		player.Notify(&pb.ServerEvent{Type: "Test :3 " + strconv.Itoa(i)})
+		player.Notify(&pb.ServerEvent{Type: pb.Type_PLAYER_ADDED})
 		i++
 	}
-}
+}*/
 
 func listenAndHandleEvents(conn *game.Connection, errCh chan error) {
 	for {

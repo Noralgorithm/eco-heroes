@@ -7,14 +7,24 @@ option java_outer_classname = "GameEventsProto";
 
 package ecoheroes;
 
+enum Type {
+  UNSPECIFIED = 0;
+  PLAYER_ADDED = 1;
+  PLAYER_REMOVED = 2;
+  WASTE_GENERATED = 3;
+  WASTE_PLACED = 4;
+  LIFE_LOST = 5;
+  SPEED_INCREASED = 6;
+  GAME_ENDED = 7;
+}
+
 message SubscriptionRequest {
   string roomId = 1;
   int32 playerNumber = 2;
 }
 
 message ServerEvent {
-// TODO: Make this an enum.
-  string type = 1;
+  Type type = 1;
 }
 
 service GameEvents {
