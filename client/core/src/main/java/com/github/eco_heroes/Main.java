@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.github.eco_heroes.proto.rooms.JoinRequest;
 import com.github.eco_heroes.screens.MainMenuScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -18,10 +19,16 @@ public class Main extends Game {
     Vector2 touchPos;
     float dropTimer;
 
+    //GRPC TESTS
+    public Main() {
+        var jr = new Room();
+    }
+
     //x.x.x.x.x  <--- yo
     /*private ManagedChannel channel;
     private YourServiceGrpc.YourServiceStub asyncStub;
 */
+
     //load assets
     @Override
     public void create() {
