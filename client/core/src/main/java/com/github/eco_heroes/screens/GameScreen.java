@@ -28,6 +28,7 @@ public class GameScreen implements Screen {
     Texture jugTexture;
     Texture blueContainerTexture;
     Texture yellowContainerTexture;
+    Texture backgroundTexture;
 
     //game logic
     private Array<TrashElement> trashElements;
@@ -38,6 +39,7 @@ public class GameScreen implements Screen {
     //actors
     BlueContainer blueContainer;
     YellowContainer yellowContainer;
+    AnimatedTile animatedTile;
 
     public GameScreen(final Main game){
         this.game = game;
@@ -54,11 +56,13 @@ public class GameScreen implements Screen {
         //--TrashItems
         bottleTexture = new Texture("plastic_bottle.png");
         jugTexture = new Texture("plastic_jug.png");
+        backgroundTexture = new Texture("background.png");
         //--Containers
         blueContainerTexture = new Texture("container_blue.png");
         yellowContainerTexture = new Texture("container_yellow.png");
 
         //Actors
+        animatedTile = new AnimatedTile();
         blueContainer = new BlueContainer(blueContainerTexture, 300, 300);
         blueContainer.setPosition(300, 300);
         yellowContainer = new YellowContainer(yellowContainerTexture, 500, 300);
@@ -109,9 +113,16 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
 
+        animatedTile.update(delta);
+
         game.batch.begin();
-        stage.draw();
+        game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.font.draw(game.batch, "Vidas: " + GameState.getInstance().getLives(), 0, 480);
+        animatedTile.drawRow(game.batch, 0, 90, 15);
+        game.batch.end();
+
+        stage.draw();
+
 
         for (TrashElement trashElement : trashElements) {
             trashElement.update(delta);
@@ -120,7 +131,6 @@ public class GameScreen implements Screen {
         if (TimeUtils.nanoTime() - lastTrashElementTime > 5000000000L)
             spawnTrashItem();
 
-        game.batch.end();
 
         if (GameState.getInstance().getLives() <= 0) {
             game.setScreen(new GameOverScreen(game));
