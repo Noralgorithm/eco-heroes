@@ -18,6 +18,10 @@ public class Main extends Game {
     Vector2 touchPos;
     float dropTimer;
 
+    //x.x.x.x.x  <--- yo
+    /*private ManagedChannel channel;
+    private YourServiceGrpc.YourServiceStub asyncStub;
+*/
     //load assets
     @Override
     public void create() {
