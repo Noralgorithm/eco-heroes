@@ -7,16 +7,21 @@ option java_outer_classname = "RoomsProto";
 
 package ecoheroes;
 
-import 'void.proto';
+import 'google/protobuf/empty.proto';
 
 message RoomDataReply {
   string id = 1;
   repeated PlayerInRoomData players = 2;
   int32 playersLimit = 3;
+  PlayerInRoomData me = 4;
 }
 
 message JoinRequest {
   string roomId = 1;
+}
+
+message RoomsListReply {
+  repeated RoomDataReply rooms = 1;
 }
 
 message PlayerInRoomData {
@@ -24,6 +29,7 @@ message PlayerInRoomData {
 }
 
 service Rooms {
-  rpc createAndJoin(JoinRequest) returns (RoomDataReply);
+  rpc createAndJoin(google.protobuf.Empty) returns (RoomDataReply);
   rpc join(JoinRequest) returns (RoomDataReply);
+  rpc fetch(google.protobuf.Empty) returns (RoomsListReply);
 }
