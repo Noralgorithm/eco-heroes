@@ -37,13 +37,12 @@ func (g *Game) Start() {
 }
 
 func (g *Game) WasteGenerationLoop() {
-	interval := time.Second * time.Duration((MaxSpeed-1)-g.Speed)
-
 	for {
 		select {
 		case <-g.GameOverChannel:
 			return
 		default:
+			interval := time.Second * time.Duration((MaxSpeed+1)-g.Speed)
 			time.Sleep(interval)
 			g.SendWaste()
 			g.UpdateGameSpeed()
