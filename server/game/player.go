@@ -8,6 +8,7 @@ import (
 type Player struct {
 	Number     int
 	Connection Connection
+	Match      Match
 }
 
 type Connection struct {
@@ -25,10 +26,13 @@ func (p *Player) Subscribe(stream grpc.ServerStreamingServer[pb.ServerEvent]) (*
 }
 
 func (p *Player) Notify(evt *pb.ServerEvent) {
-
 	if p.Connection.Channel == nil {
 		return
 	}
 
 	p.Connection.Channel <- evt
+}
+
+func (p *Player) InitMatch() {
+	p.Match = NewMatch()
 }

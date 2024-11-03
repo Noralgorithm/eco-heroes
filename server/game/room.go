@@ -7,19 +7,14 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	InitialSpeed = 1
-)
-
 type Room struct {
 	Id      uuid.UUID
 	Matches []Match
 	Players []*Player
-	Speed   int
 }
 
 func NewRoom() Room {
-	return Room{Id: uuid.New(), Players: []*Player{}, Matches: []Match{}, Speed: InitialSpeed}
+	return Room{Id: uuid.New(), Players: []*Player{}, Matches: []Match{}}
 }
 
 func CreateRoom() *Room {
@@ -67,6 +62,6 @@ func (r *Room) FindPlayer(playerNumber int) (*Player, int) {
 
 func (r *Room) Notify(evt *pb.ServerEvent) {
 	for _, player := range r.Players {
-		player.Notify(evt)
+		go player.Notify(evt)
 	}
 }

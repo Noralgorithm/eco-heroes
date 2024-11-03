@@ -40,7 +40,6 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 	}
 
 	go listenAndHandleEvents(&connectedPlayer.Connection, errCh)
-	//go debugEvents(player)
 
 	return <-errCh
 }
@@ -51,9 +50,9 @@ func (*GameEventsService) StarGame(_ context.Context, sgr *pb.StartGameRequest) 
 		return nil, errors.New("room not found")
 	}
 
-	newGame := game.CreateGame(room)
+	newGame := game.NewGame(room)
 
-	newGame.Execute()
+	newGame.Start()
 	playersInRoom := make([]*pb.PlayerInRoomGameData, len(room.Players))
 
 	for i, p := range room.Players {
@@ -68,15 +67,6 @@ func (*GameEventsService) StarGame(_ context.Context, sgr *pb.StartGameRequest) 
 	}
 	return out, nil
 }
-
-/*func debugEvents(player *game.Player) {
-	i := 0
-	for {
-		time.Sleep(1000 * time.Millisecond)
-		player.Notify(&pb.ServerEvent{Type: pb.Type_PLAYER_ADDED})
-		i++
-	}
-}*/
 
 func listenAndHandleEvents(conn *game.Connection, errCh chan error) {
 	for {

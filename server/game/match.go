@@ -1,21 +1,19 @@
 package game
 
-var (
+const (
 	InitialScore = 0
 	InitialLives = 3
 )
 
 type Match struct {
-	Player *Player
-	Score  int
-	Lives  int
+	Score int
+	Lives int
 }
 
-func NewMatch(p Player) Match {
+func NewMatch() Match {
 	m := Match{
-		Player: &p,
-		Score:  InitialScore,
-		Lives:  InitialLives,
+		Score: InitialScore,
+		Lives: InitialLives,
 	}
 
 	return m

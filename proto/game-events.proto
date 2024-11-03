@@ -7,22 +7,22 @@ option java_outer_classname = "GameEventsProto";
 
 package ecoheroes;
 
-enum TypeWaste {
-    PLASTIC_BOTTLE = 0;
-    PLASTIC_JUG = 1;
-    PLASTIC_DETERGENT_BOTTLE = 2;
-    PAPER_NEWSPAPER = 3;
-    PAPER_BAG = 4;
-    GLASS_SODA_BOTTLE = 5;
-    GLASS_JAR = 6;
-    GLASS_BOTTLE = 7;
-    METAL_SMALL_CAN = 8;
-    METAL_CAN = 9;
-    METAL_SODA_CAN = 10;
-    POLYSTYRENE_CUP = 11;
-    PIZZA_BOX = 12;
-    MUG = 13;
-    AEROSOL_CAN = 14;
+enum WasteType {
+  PLASTIC_BOTTLE = 0;
+  PLASTIC_JUG = 1;
+  PLASTIC_DETERGENT_BOTTLE = 2;
+  PAPER_NEWSPAPER = 3;
+  PAPER_BAG = 4;
+  GLASS_SODA_BOTTLE = 5;
+  GLASS_JAR = 6;
+  GLASS_BOTTLE = 7;
+  METAL_SMALL_CAN = 8;
+  METAL_CAN = 9;
+  METAL_SODA_CAN = 10;
+  POLYSTYRENE_CUP = 11;
+  PIZZA_BOX = 12;
+  MUG = 13;
+  AEROSOL_CAN = 14;
 }
 
 //TODO SEE HOW USE THE ROOMDATAREPLY FORM ROOMS.PROTO
@@ -44,7 +44,10 @@ message SubscriptionRequest {
 message StartGameRequest {
   string roomId = 1;
 }
+
+// Events
 message Unspecified {}
+
 message PlayerAdded {
   int32 playerNumber = 1;
 }
@@ -55,10 +58,11 @@ message GameStarted {
   string message = 1;
 }
 message WasteGenerated {
-  TypeWaste waste = 1;
+  WasteType waste = 1;
 }
 message LifeLost {
   int32 lives = 1;
+  int32 playerNumber = 2;
 }
 message SpeedIncreased {
   int32 speed = 1;
@@ -66,20 +70,21 @@ message SpeedIncreased {
 message GameEnded {
   int32 winnerNumber = 1;
 }
+
 message ServerEvent {
   oneof Event {
     Unspecified unspecifiedEvt = 1;
     PlayerAdded playerAddedEvt = 2;
     PlayerRemoved playerRemovedEvt = 3;
-    GameStarted gameStarted = 4;
-    WasteGenerated wasteGenerated = 5;
-    LifeLost lifeLost = 6;
-    SpeedIncreased speedIncreased= 7;
-    GameEnded gameEnded = 8;
+    GameStarted gameStartedEvt = 4;
+    WasteGenerated wasteGeneratedEvt = 5;
+    LifeLost lifeLostEvt = 6;
+    SpeedIncreased speedIncreasedEvt = 7;
+    GameEnded gameEndedEvt = 8;
   }
 }
 
 service GameEvents {
   rpc subscribe(SubscriptionRequest) returns (stream ServerEvent);
-  rpc StarGame(StartGameRequest) returns (RoomGameDataReply);
+  rpc startGame(StartGameRequest) returns (RoomGameDataReply);
 }
