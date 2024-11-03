@@ -44,7 +44,7 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 	return <-errCh
 }
 
-func (*GameEventsService) StarGame(_ context.Context, sgr *pb.StartGameRequest) (*pb.RoomGameDataReply, error) {
+func (*GameEventsService) StartGame(_ context.Context, sgr *pb.StartGameRequest) (*pb.RoomGameDataReply, error) {
 	room := game.FindActiveRoom(sgr.RoomId)
 	if room == nil {
 		return nil, errors.New("room not found")
@@ -52,7 +52,6 @@ func (*GameEventsService) StarGame(_ context.Context, sgr *pb.StartGameRequest) 
 
 	newGame := game.NewGame(room)
 
-	newGame.Start()
 	playersInRoom := make([]*pb.PlayerInRoomGameData, len(room.Players))
 
 	for i, p := range room.Players {
@@ -65,6 +64,8 @@ func (*GameEventsService) StarGame(_ context.Context, sgr *pb.StartGameRequest) 
 		Players:      playersInRoom,
 		PlayersLimit: int32(playersLimit),
 	}
+
+	newGame.Start()
 	return out, nil
 }
 
