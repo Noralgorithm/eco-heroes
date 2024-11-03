@@ -46,6 +46,7 @@ func (g *Game) WasteGenerationLoop() {
 		default:
 			time.Sleep(interval)
 			g.SendWaste()
+			g.UpdateGameSpeed()
 		}
 	}
 }
