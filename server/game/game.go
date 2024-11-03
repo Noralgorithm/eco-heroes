@@ -2,6 +2,7 @@ package game
 
 import (
 	pb "github.com/eco-heroes/server/proto/gameevents"
+	"log"
 	"time"
 )
 
@@ -51,6 +52,8 @@ func (g *Game) WasteGenerationLoop() {
 
 func (g *Game) SendWaste() {
 	waste := GenerateRandomWaste()
+
+	log.Printf("Generated waste: %v", waste) // Agrega un log aquí
 
 	g.Room.Notify(
 		&pb.ServerEvent{

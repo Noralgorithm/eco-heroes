@@ -20,12 +20,12 @@ var WasteTypes = []pb.WasteType{
 	pb.WasteType_POLYSTYRENE_CUP,
 	pb.WasteType_PIZZA_BOX,
 	pb.WasteType_MUG,
+	pb.WasteType_AEROSOL_CAN,
 }
 
 func GenerateRandomWaste() pb.WasteType {
-	minBound := 0
-	maxBound := len(WasteTypes) - 1
-	idx := rand.Intn(maxBound-minBound) + minBound
+	maxBound := len(WasteTypes)
+	idx := rand.Intn(maxBound)
 
 	return WasteTypes[idx]
 }
