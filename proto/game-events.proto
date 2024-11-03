@@ -7,18 +7,6 @@ option java_outer_classname = "GameEventsProto";
 
 package ecoheroes;
 
-enum EventType {
-  UNSPECIFIED = 0;
-  PLAYER_ADDED = 1;
-  PLAYER_REMOVED = 2;
-  GAME_STARTED =  3;
-  WASTE_GENERATED = 4;
-  WASTE_PLACED = 5;
-  LIFE_LOST = 6;
-  SPEED_INCREASED = 7;
-  GAME_ENDED = 8;
-}
-
 enum TypeWaste {
     PLASTIC_BOTTLE = 0;
     PLASTIC_JUG = 1;
@@ -37,33 +25,48 @@ enum TypeWaste {
     AEROSOL_CAN = 14;
 }
 
+//TODO SEE HOW USE THE ROOMDATAREPLY FORM ROOMS.PROTO
+
+message RoomGameDataReply {
+  string id = 1;
+  repeated PlayerInRoomGameData players = 2;
+  int32 playersLimit = 3;
+}
+
+message PlayerInRoomGameData {
+  int32 number = 1;
+}
+
 message SubscriptionRequest {
   string roomId = 1;
   int32 playerNumber = 2;
 }
-
+message StartGameRequest {
+  string roomId = 1;
+}
+message Unspecified {}
+message PlayerAdded {
+  int32 playerNumber = 1;
+}
+message PlayerRemoved {
+  int32 playerNumber = 1;
+}
+message GameStarted {
+  string message = 1;
+}
+message WasteGenerated {
+  TypeWaste waste = 1;
+}
+message LifeLost {
+  int32 lives = 1;
+}
+message SpeedIncreased {
+  int32 speed = 1;
+}
+message GameEnded {
+  int32 winnerNumber = 1;
+}
 message ServerEvent {
-  message Unspecified {}
-  message PlayerAdded {
-    int32 playerNumber = 1;
-  }
-  message PlayerRemoved {
-    int32 playerNumber = 1;
-  }
-  message GameStarted {}
-  message WasteGenerated {
-    TypeWaste waste = 1;
-  }
-  message LifeLost {
-    int32 lives = 1;
-  }
-  message SpeedIncreased {
-    int32 speed = 1;
-  }
-  message GameEnded {
-    int32 winnerNumber = 1;
-  }
-
   oneof Event {
     Unspecified unspecifiedEvt = 1;
     PlayerAdded playerAddedEvt = 2;
@@ -78,4 +81,5 @@ message ServerEvent {
 
 service GameEvents {
   rpc subscribe(SubscriptionRequest) returns (stream ServerEvent);
+  rpc StarGame(StartGameRequest) returns (RoomGameDataReply);
 }

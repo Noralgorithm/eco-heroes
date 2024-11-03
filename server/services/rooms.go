@@ -41,6 +41,8 @@ func (rs *RoomsService) Join(_ context.Context, jr *pb.JoinRequest) (*pb.RoomDat
 	}
 	player := room.AddPlayer()
 
+	//TODO ADD FUNCTION TO GET PLAYERS IN A ROOM?
+
 	playersInRoom := make([]*pb.PlayerInRoomData, len(room.Players))
 
 	for i, p := range room.Players {

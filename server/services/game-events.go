@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 
 	"github.com/eco-heroes/server/game"
@@ -26,7 +27,10 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 	}
 
 	go func() {
-		room.Notify(&pb.ServerEvent{Type: pb.Type_PLAYER_ADDED})
+		room.Notify(&pb.ServerEvent{
+			Event: &pb.ServerEvent_PlayerAddedEvt{
+				PlayerAddedEvt: &pb.PlayerAdded{
+					PlayerNumber: int32(player.Number)}}})
 	}()
 
 	connectedPlayer, err := player.Subscribe(stream)
@@ -39,6 +43,30 @@ func (*GameEventsService) Subscribe(sr *pb.SubscriptionRequest, stream grpc.Serv
 	//go debugEvents(player)
 
 	return <-errCh
+}
+
+func (*GameEventsService) StarGame(_ context.Context, sgr *pb.StartGameRequest) (*pb.RoomGameDataReply, error) {
+	room := game.FindActiveRoom(sgr.RoomId)
+	if room == nil {
+		return nil, errors.New("room not found")
+	}
+
+	newGame := game.CreateGame(room)
+
+	newGame.Execute()
+	playersInRoom := make([]*pb.PlayerInRoomGameData, len(room.Players))
+
+	for i, p := range room.Players {
+		playersInRoom[i] = &pb.PlayerInRoomGameData{
+			Number: int32(p.Number),
+		}
+	}
+	out := &pb.RoomGameDataReply{
+		Id:           room.Id.String(),
+		Players:      playersInRoom,
+		PlayersLimit: int32(playersLimit),
+	}
+	return out, nil
 }
 
 /*func debugEvents(player *game.Player) {
