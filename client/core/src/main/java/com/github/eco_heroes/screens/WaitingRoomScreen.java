@@ -2,15 +2,14 @@ package com.github.eco_heroes.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eco_heroes.Main;
@@ -21,9 +20,10 @@ public class WaitingRoomScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private TextField nameInputFieldUi;
-    private List<Player> nameListUi;
+    private List<String> nameListUi; // Change to List<String> for player names
     private Array<Player> players;
     private Texture backgroundTexture;
+    private boolean nameSet; // Flag to track if the name has been set
 
     public WaitingRoomScreen(final Main game) {
         this.game = game;
@@ -34,34 +34,80 @@ public class WaitingRoomScreen implements Screen {
         backgroundTexture = new Texture("background.png");
 
         players = new Array<>();
-        // Add predefined players (you can replace these with actual data from a server or database)
-        players.add(new Player("Player 1"));
-        players.add(new Player("Player 2"));
-        players.add(new Player("Player 3"));
+        players.add(new Player("lol"));
+        nameSet = false; // Initialize the flag
 
-        // Create a TextField for the player's name
+        setUpUI();
+    }
+
+    private void setUpUI() {
+        Table table = new Table();
+        table.pad(16);
+        table.setDebug(true);
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        // Title
+        Label titleLabel = new Label("Sala de Espera", skin);
+        titleLabel.setColor(Color.BLACK);
+        titleLabel.setAlignment(Align.center);
+        table.add(titleLabel).growX().spaceBottom(32).center();
+
+        // Player's name
+        table.row();
+        Table playerNameTable = new Table();
+        playerNameTable.defaults().space(8);
+        Label nameLabel = new Label("Ingresa tu nombre: ", skin);
+        nameLabel.setColor(Color.BLACK);
+        playerNameTable.add(nameLabel);
+
         nameInputFieldUi = new TextField("", skin);
+        nameInputFieldUi.setColor(Color.WHITE);
+        playerNameTable.add(nameInputFieldUi);
 
-        // Create a button to set the player's name
-        TextButton setNameButton = new TextButton("Set My Name", skin);
+        TextButton setNameButton = new TextButton("Unirse", skin);
+        setNameButton.setColor(Color.GRAY);
+        playerNameTable.add(setNameButton);
+        table.add(playerNameTable).spaceBottom(15).width(64);
+
         setNameButton.addListener(new ClickListener() {
             @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 String name = nameInputFieldUi.getText();
-                if (!name.isEmpty()) {
-                    // Add the player's name to the list
+                if (!name.isEmpty() && !nameSet) { // Check if the name has not been set yet
                     players.add(new Player(name)); // Add the player to the array
-                    nameListUi.setItems(players); // Update the list to show the new player
                     nameInputFieldUi.setText(""); // Clear the input field
+                    nameSet = true; // Set the flag to true
+                    nameInputFieldUi.setDisabled(true); // Disable the input field
+                    setNameButton.setDisabled(true); // Disable the button
+
+                    // Update the player list display
+                    updatePlayerListDisplay();
                 }
             }
         });
 
-        // Create a button to start the game
-        TextButton startGameButton = new TextButton("Start Game", skin);
-        startGameButton.addListener(new ClickListener() {
+
+        // Players list
+        table.row();
+        Label listTitleLabel = new Label("Jugadores en sala:", skin);
+        listTitleLabel.setColor(Color.BLACK);
+        table.add(listTitleLabel).spaceBottom(16);
+
+        // Initialize the player list display
+        nameListUi = new List<>(skin);
+        nameListUi.setColor(Color.CLEAR);
+        nameListUi.setItems(players); // Set initial items
+        table.row();
+        table.add(nameListUi).expandX(); // Add the list to the table
+
+        //button ready
+        table.row();
+        TextButton readyButton = new TextButton("Listo", skin);
+        table.add(readyButton).growX().spaceTop(16);
+        readyButton.addListener(new ClickListener() {
             @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 // Set all players to ready
                 for (Player player : players) {
                     player.setReady(true);
@@ -77,25 +123,13 @@ public class WaitingRoomScreen implements Screen {
                     }
                     game.setScreen(new GameScreen(game)); // Transition to the game screen
                 });
+
             }
         });
+    }
 
-        // Create a list to display players
-        nameListUi = new List<>(skin);
-        nameListUi.setItems(players); // Set the initial items to the predefined players
-
-        // Create a table to organize the UI elements
-        Table table = new Table();
-        table.setFillParent(true);
-        table.add(nameInputFieldUi).fillX().padBottom(10);
-        table.row();
-        table.add(setNameButton).fillX().padBottom(10);
-        table.row();
-        table.add(nameListUi).fill().expand().padBottom(10); // Add the list to the table
-        table.row(); // Move to the next row
-        table.add(startGameButton).fillX().padTop(10); // Add the Start Game button at the bottom
-
-        stage.addActor(table);
+    private void updatePlayerListDisplay() {
+        nameListUi.setItems(players); // Update the list with current player names
     }
 
     @Override
@@ -134,5 +168,6 @@ public class WaitingRoomScreen implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        backgroundTexture.dispose(); // Dispose of the background texture
     }
 }
