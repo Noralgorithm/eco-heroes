@@ -34,8 +34,7 @@ enum ContainerType {
   YELLOW = 1;
   GREEN = 2;
   BLUE = 3;
-  BROWN = 4;
-  DUMP = 5;
+  DUMP = 4;
 }
 
 //TODO SEE HOW USE THE ROOMDATAREPLY FORM ROOMS.PROTO

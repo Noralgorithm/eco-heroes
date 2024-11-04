@@ -85,7 +85,7 @@ func (*GameEventsService) DepositWaste(_ context.Context, dwr *pb.DepositWasteRe
 
 	if !isWasteProperlyDisposed {
 		player.Match.Lives--
-		room.Notify(&pb.ServerEvent{Event: pb.ServerEvent_LifeLostEvt{LifeLostEvt: pb.LifeLost{
+		room.Notify(&pb.ServerEvent{Event: &pb.ServerEvent_LifeLostEvt{LifeLostEvt: &pb.LifeLost{
 			Lives:        int32(player.Match.Lives),
 			PlayerNumber: int32(player.Number),
 		}}})
