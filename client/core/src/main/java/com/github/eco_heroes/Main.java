@@ -20,11 +20,6 @@ public class Main extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
 
-    SpriteBatch spriteBatch;
-    FitViewport viewport;
-    Vector2 touchPos;
-    float dropTimer;
-
     //GRPC TESTS
     public Main() {
         var roomsClient = new RoomsClient();
