@@ -77,6 +77,37 @@ public final class GameEventsGrpc {
     return getStartGameMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.github.eco_heroes.proto.game_events.DepositWasteRequest,
+      com.google.protobuf.Empty> getDepositWasteMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "depositWaste",
+      requestType = com.github.eco_heroes.proto.game_events.DepositWasteRequest.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.github.eco_heroes.proto.game_events.DepositWasteRequest,
+      com.google.protobuf.Empty> getDepositWasteMethod() {
+    io.grpc.MethodDescriptor<com.github.eco_heroes.proto.game_events.DepositWasteRequest, com.google.protobuf.Empty> getDepositWasteMethod;
+    if ((getDepositWasteMethod = GameEventsGrpc.getDepositWasteMethod) == null) {
+      synchronized (GameEventsGrpc.class) {
+        if ((getDepositWasteMethod = GameEventsGrpc.getDepositWasteMethod) == null) {
+          GameEventsGrpc.getDepositWasteMethod = getDepositWasteMethod =
+              io.grpc.MethodDescriptor.<com.github.eco_heroes.proto.game_events.DepositWasteRequest, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "depositWaste"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.github.eco_heroes.proto.game_events.DepositWasteRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setSchemaDescriptor(new GameEventsMethodDescriptorSupplier("depositWaste"))
+              .build();
+        }
+      }
+    }
+    return getDepositWasteMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -138,6 +169,13 @@ public final class GameEventsGrpc {
         io.grpc.stub.StreamObserver<com.github.eco_heroes.proto.game_events.RoomGameDataReply> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getStartGameMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void depositWaste(com.github.eco_heroes.proto.game_events.DepositWasteRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDepositWasteMethod(), responseObserver);
+    }
   }
 
   /**
@@ -182,6 +220,14 @@ public final class GameEventsGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getStartGameMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void depositWaste(com.github.eco_heroes.proto.game_events.DepositWasteRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getDepositWasteMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -214,6 +260,13 @@ public final class GameEventsGrpc {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getStartGameMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.google.protobuf.Empty depositWaste(com.github.eco_heroes.proto.game_events.DepositWasteRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getDepositWasteMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -239,10 +292,19 @@ public final class GameEventsGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getStartGameMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> depositWaste(
+        com.github.eco_heroes.proto.game_events.DepositWasteRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getDepositWasteMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SUBSCRIBE = 0;
   private static final int METHODID_START_GAME = 1;
+  private static final int METHODID_DEPOSIT_WASTE = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -268,6 +330,10 @@ public final class GameEventsGrpc {
         case METHODID_START_GAME:
           serviceImpl.startGame((com.github.eco_heroes.proto.game_events.StartGameRequest) request,
               (io.grpc.stub.StreamObserver<com.github.eco_heroes.proto.game_events.RoomGameDataReply>) responseObserver);
+          break;
+        case METHODID_DEPOSIT_WASTE:
+          serviceImpl.depositWaste((com.github.eco_heroes.proto.game_events.DepositWasteRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -301,6 +367,13 @@ public final class GameEventsGrpc {
               com.github.eco_heroes.proto.game_events.StartGameRequest,
               com.github.eco_heroes.proto.game_events.RoomGameDataReply>(
                 service, METHODID_START_GAME)))
+        .addMethod(
+          getDepositWasteMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.github.eco_heroes.proto.game_events.DepositWasteRequest,
+              com.google.protobuf.Empty>(
+                service, METHODID_DEPOSIT_WASTE)))
         .build();
   }
 
@@ -351,6 +424,7 @@ public final class GameEventsGrpc {
               .setSchemaDescriptor(new GameEventsFileDescriptorSupplier())
               .addMethod(getSubscribeMethod())
               .addMethod(getStartGameMethod())
+              .addMethod(getDepositWasteMethod())
               .build();
         }
       }

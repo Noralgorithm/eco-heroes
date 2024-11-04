@@ -6,12 +6,12 @@
 package com.github.eco_heroes.proto.game_events;
 
 /**
- * Protobuf type {@code ecoheroes.SubscriptionRequest}
+ * Protobuf type {@code ecoheroes.DepositWasteRequest}
  */
-public final class SubscriptionRequest extends
+public final class DepositWasteRequest extends
     com.google.protobuf.GeneratedMessage implements
-    // @@protoc_insertion_point(message_implements:ecoheroes.SubscriptionRequest)
-    SubscriptionRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:ecoheroes.DepositWasteRequest)
+    DepositWasteRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
@@ -20,34 +20,72 @@ private static final long serialVersionUID = 0L;
       /* minor= */ 28,
       /* patch= */ 3,
       /* suffix= */ "",
-      SubscriptionRequest.class.getName());
+      DepositWasteRequest.class.getName());
   }
-  // Use SubscriptionRequest.newBuilder() to construct.
-  private SubscriptionRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+  // Use DepositWasteRequest.newBuilder() to construct.
+  private DepositWasteRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
     super(builder);
   }
-  private SubscriptionRequest() {
+  private DepositWasteRequest() {
+    waste_ = 0;
+    container_ = 0;
     roomId_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_SubscriptionRequest_descriptor;
+    return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_DepositWasteRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_SubscriptionRequest_fieldAccessorTable
+    return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_DepositWasteRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.github.eco_heroes.proto.game_events.SubscriptionRequest.class, com.github.eco_heroes.proto.game_events.SubscriptionRequest.Builder.class);
+            com.github.eco_heroes.proto.game_events.DepositWasteRequest.class, com.github.eco_heroes.proto.game_events.DepositWasteRequest.Builder.class);
   }
 
-  public static final int ROOMID_FIELD_NUMBER = 1;
+  public static final int WASTE_FIELD_NUMBER = 1;
+  private int waste_ = 0;
+  /**
+   * <code>.ecoheroes.WasteType waste = 1;</code>
+   * @return The enum numeric value on the wire for waste.
+   */
+  @java.lang.Override public int getWasteValue() {
+    return waste_;
+  }
+  /**
+   * <code>.ecoheroes.WasteType waste = 1;</code>
+   * @return The waste.
+   */
+  @java.lang.Override public com.github.eco_heroes.proto.game_events.WasteType getWaste() {
+    com.github.eco_heroes.proto.game_events.WasteType result = com.github.eco_heroes.proto.game_events.WasteType.forNumber(waste_);
+    return result == null ? com.github.eco_heroes.proto.game_events.WasteType.UNRECOGNIZED : result;
+  }
+
+  public static final int CONTAINER_FIELD_NUMBER = 2;
+  private int container_ = 0;
+  /**
+   * <code>.ecoheroes.ContainerType container = 2;</code>
+   * @return The enum numeric value on the wire for container.
+   */
+  @java.lang.Override public int getContainerValue() {
+    return container_;
+  }
+  /**
+   * <code>.ecoheroes.ContainerType container = 2;</code>
+   * @return The container.
+   */
+  @java.lang.Override public com.github.eco_heroes.proto.game_events.ContainerType getContainer() {
+    com.github.eco_heroes.proto.game_events.ContainerType result = com.github.eco_heroes.proto.game_events.ContainerType.forNumber(container_);
+    return result == null ? com.github.eco_heroes.proto.game_events.ContainerType.UNRECOGNIZED : result;
+  }
+
+  public static final int ROOMID_FIELD_NUMBER = 3;
   @SuppressWarnings("serial")
   private volatile java.lang.Object roomId_ = "";
   /**
-   * <code>string roomId = 1;</code>
+   * <code>string roomId = 3;</code>
    * @return The roomId.
    */
   @java.lang.Override
@@ -64,7 +102,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string roomId = 1;</code>
+   * <code>string roomId = 3;</code>
    * @return The bytes for roomId.
    */
   @java.lang.Override
@@ -82,10 +120,10 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int PLAYERNUMBER_FIELD_NUMBER = 2;
+  public static final int PLAYERNUMBER_FIELD_NUMBER = 4;
   private int playerNumber_ = 0;
   /**
-   * <code>int32 playerNumber = 2;</code>
+   * <code>int32 playerNumber = 4;</code>
    * @return The playerNumber.
    */
   @java.lang.Override
@@ -107,11 +145,17 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (waste_ != com.github.eco_heroes.proto.game_events.WasteType.WASTE_TYPE_UNKNOWN.getNumber()) {
+      output.writeEnum(1, waste_);
+    }
+    if (container_ != com.github.eco_heroes.proto.game_events.ContainerType.CONTAINER_TYPE_UNKNOWN.getNumber()) {
+      output.writeEnum(2, container_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(roomId_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 1, roomId_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 3, roomId_);
     }
     if (playerNumber_ != 0) {
-      output.writeInt32(2, playerNumber_);
+      output.writeInt32(4, playerNumber_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -122,12 +166,20 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (waste_ != com.github.eco_heroes.proto.game_events.WasteType.WASTE_TYPE_UNKNOWN.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, waste_);
+    }
+    if (container_ != com.github.eco_heroes.proto.game_events.ContainerType.CONTAINER_TYPE_UNKNOWN.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(2, container_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(roomId_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, roomId_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, roomId_);
     }
     if (playerNumber_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, playerNumber_);
+        .computeInt32Size(4, playerNumber_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -139,11 +191,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.github.eco_heroes.proto.game_events.SubscriptionRequest)) {
+    if (!(obj instanceof com.github.eco_heroes.proto.game_events.DepositWasteRequest)) {
       return super.equals(obj);
     }
-    com.github.eco_heroes.proto.game_events.SubscriptionRequest other = (com.github.eco_heroes.proto.game_events.SubscriptionRequest) obj;
+    com.github.eco_heroes.proto.game_events.DepositWasteRequest other = (com.github.eco_heroes.proto.game_events.DepositWasteRequest) obj;
 
+    if (waste_ != other.waste_) return false;
+    if (container_ != other.container_) return false;
     if (!getRoomId()
         .equals(other.getRoomId())) return false;
     if (getPlayerNumber()
@@ -159,6 +213,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + WASTE_FIELD_NUMBER;
+    hash = (53 * hash) + waste_;
+    hash = (37 * hash) + CONTAINER_FIELD_NUMBER;
+    hash = (53 * hash) + container_;
     hash = (37 * hash) + ROOMID_FIELD_NUMBER;
     hash = (53 * hash) + getRoomId().hashCode();
     hash = (37 * hash) + PLAYERNUMBER_FIELD_NUMBER;
@@ -168,44 +226,44 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(byte[] data)
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(java.io.InputStream input)
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -213,26 +271,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseDelimitedFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest parseFrom(
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -245,7 +303,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.github.eco_heroes.proto.game_events.SubscriptionRequest prototype) {
+  public static Builder newBuilder(com.github.eco_heroes.proto.game_events.DepositWasteRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -261,26 +319,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code ecoheroes.SubscriptionRequest}
+   * Protobuf type {@code ecoheroes.DepositWasteRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:ecoheroes.SubscriptionRequest)
-      com.github.eco_heroes.proto.game_events.SubscriptionRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:ecoheroes.DepositWasteRequest)
+      com.github.eco_heroes.proto.game_events.DepositWasteRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_SubscriptionRequest_descriptor;
+      return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_DepositWasteRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_SubscriptionRequest_fieldAccessorTable
+      return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_DepositWasteRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.github.eco_heroes.proto.game_events.SubscriptionRequest.class, com.github.eco_heroes.proto.game_events.SubscriptionRequest.Builder.class);
+              com.github.eco_heroes.proto.game_events.DepositWasteRequest.class, com.github.eco_heroes.proto.game_events.DepositWasteRequest.Builder.class);
     }
 
-    // Construct using com.github.eco_heroes.proto.game_events.SubscriptionRequest.newBuilder()
+    // Construct using com.github.eco_heroes.proto.game_events.DepositWasteRequest.newBuilder()
     private Builder() {
 
     }
@@ -294,6 +352,8 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
+      waste_ = 0;
+      container_ = 0;
       roomId_ = "";
       playerNumber_ = 0;
       return this;
@@ -302,17 +362,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_SubscriptionRequest_descriptor;
+      return com.github.eco_heroes.proto.game_events.GameEventsProto.internal_static_ecoheroes_DepositWasteRequest_descriptor;
     }
 
     @java.lang.Override
-    public com.github.eco_heroes.proto.game_events.SubscriptionRequest getDefaultInstanceForType() {
-      return com.github.eco_heroes.proto.game_events.SubscriptionRequest.getDefaultInstance();
+    public com.github.eco_heroes.proto.game_events.DepositWasteRequest getDefaultInstanceForType() {
+      return com.github.eco_heroes.proto.game_events.DepositWasteRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.github.eco_heroes.proto.game_events.SubscriptionRequest build() {
-      com.github.eco_heroes.proto.game_events.SubscriptionRequest result = buildPartial();
+    public com.github.eco_heroes.proto.game_events.DepositWasteRequest build() {
+      com.github.eco_heroes.proto.game_events.DepositWasteRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -320,38 +380,50 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.github.eco_heroes.proto.game_events.SubscriptionRequest buildPartial() {
-      com.github.eco_heroes.proto.game_events.SubscriptionRequest result = new com.github.eco_heroes.proto.game_events.SubscriptionRequest(this);
+    public com.github.eco_heroes.proto.game_events.DepositWasteRequest buildPartial() {
+      com.github.eco_heroes.proto.game_events.DepositWasteRequest result = new com.github.eco_heroes.proto.game_events.DepositWasteRequest(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.github.eco_heroes.proto.game_events.SubscriptionRequest result) {
+    private void buildPartial0(com.github.eco_heroes.proto.game_events.DepositWasteRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.roomId_ = roomId_;
+        result.waste_ = waste_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.container_ = container_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.roomId_ = roomId_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
         result.playerNumber_ = playerNumber_;
       }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.github.eco_heroes.proto.game_events.SubscriptionRequest) {
-        return mergeFrom((com.github.eco_heroes.proto.game_events.SubscriptionRequest)other);
+      if (other instanceof com.github.eco_heroes.proto.game_events.DepositWasteRequest) {
+        return mergeFrom((com.github.eco_heroes.proto.game_events.DepositWasteRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.github.eco_heroes.proto.game_events.SubscriptionRequest other) {
-      if (other == com.github.eco_heroes.proto.game_events.SubscriptionRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.github.eco_heroes.proto.game_events.DepositWasteRequest other) {
+      if (other == com.github.eco_heroes.proto.game_events.DepositWasteRequest.getDefaultInstance()) return this;
+      if (other.waste_ != 0) {
+        setWasteValue(other.getWasteValue());
+      }
+      if (other.container_ != 0) {
+        setContainerValue(other.getContainerValue());
+      }
       if (!other.getRoomId().isEmpty()) {
         roomId_ = other.roomId_;
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       if (other.getPlayerNumber() != 0) {
@@ -383,16 +455,26 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 10: {
-              roomId_ = input.readStringRequireUtf8();
+            case 8: {
+              waste_ = input.readEnum();
               bitField0_ |= 0x00000001;
               break;
-            } // case 10
+            } // case 8
             case 16: {
-              playerNumber_ = input.readInt32();
+              container_ = input.readEnum();
               bitField0_ |= 0x00000002;
               break;
             } // case 16
+            case 26: {
+              roomId_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 26
+            case 32: {
+              playerNumber_ = input.readInt32();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 32
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -410,9 +492,115 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
+    private int waste_ = 0;
+    /**
+     * <code>.ecoheroes.WasteType waste = 1;</code>
+     * @return The enum numeric value on the wire for waste.
+     */
+    @java.lang.Override public int getWasteValue() {
+      return waste_;
+    }
+    /**
+     * <code>.ecoheroes.WasteType waste = 1;</code>
+     * @param value The enum numeric value on the wire for waste to set.
+     * @return This builder for chaining.
+     */
+    public Builder setWasteValue(int value) {
+      waste_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.ecoheroes.WasteType waste = 1;</code>
+     * @return The waste.
+     */
+    @java.lang.Override
+    public com.github.eco_heroes.proto.game_events.WasteType getWaste() {
+      com.github.eco_heroes.proto.game_events.WasteType result = com.github.eco_heroes.proto.game_events.WasteType.forNumber(waste_);
+      return result == null ? com.github.eco_heroes.proto.game_events.WasteType.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.ecoheroes.WasteType waste = 1;</code>
+     * @param value The waste to set.
+     * @return This builder for chaining.
+     */
+    public Builder setWaste(com.github.eco_heroes.proto.game_events.WasteType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      bitField0_ |= 0x00000001;
+      waste_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.ecoheroes.WasteType waste = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearWaste() {
+      bitField0_ = (bitField0_ & ~0x00000001);
+      waste_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int container_ = 0;
+    /**
+     * <code>.ecoheroes.ContainerType container = 2;</code>
+     * @return The enum numeric value on the wire for container.
+     */
+    @java.lang.Override public int getContainerValue() {
+      return container_;
+    }
+    /**
+     * <code>.ecoheroes.ContainerType container = 2;</code>
+     * @param value The enum numeric value on the wire for container to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContainerValue(int value) {
+      container_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.ecoheroes.ContainerType container = 2;</code>
+     * @return The container.
+     */
+    @java.lang.Override
+    public com.github.eco_heroes.proto.game_events.ContainerType getContainer() {
+      com.github.eco_heroes.proto.game_events.ContainerType result = com.github.eco_heroes.proto.game_events.ContainerType.forNumber(container_);
+      return result == null ? com.github.eco_heroes.proto.game_events.ContainerType.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.ecoheroes.ContainerType container = 2;</code>
+     * @param value The container to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContainer(com.github.eco_heroes.proto.game_events.ContainerType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      bitField0_ |= 0x00000002;
+      container_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.ecoheroes.ContainerType container = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearContainer() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      container_ = 0;
+      onChanged();
+      return this;
+    }
+
     private java.lang.Object roomId_ = "";
     /**
-     * <code>string roomId = 1;</code>
+     * <code>string roomId = 3;</code>
      * @return The roomId.
      */
     public java.lang.String getRoomId() {
@@ -428,7 +616,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string roomId = 1;</code>
+     * <code>string roomId = 3;</code>
      * @return The bytes for roomId.
      */
     public com.google.protobuf.ByteString
@@ -445,7 +633,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string roomId = 1;</code>
+     * <code>string roomId = 3;</code>
      * @param value The roomId to set.
      * @return This builder for chaining.
      */
@@ -453,22 +641,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       roomId_ = value;
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>string roomId = 1;</code>
+     * <code>string roomId = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearRoomId() {
       roomId_ = getDefaultInstance().getRoomId();
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
     /**
-     * <code>string roomId = 1;</code>
+     * <code>string roomId = 3;</code>
      * @param value The bytes for roomId to set.
      * @return This builder for chaining.
      */
@@ -477,14 +665,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       roomId_ = value;
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
 
     private int playerNumber_ ;
     /**
-     * <code>int32 playerNumber = 2;</code>
+     * <code>int32 playerNumber = 4;</code>
      * @return The playerNumber.
      */
     @java.lang.Override
@@ -492,45 +680,45 @@ private static final long serialVersionUID = 0L;
       return playerNumber_;
     }
     /**
-     * <code>int32 playerNumber = 2;</code>
+     * <code>int32 playerNumber = 4;</code>
      * @param value The playerNumber to set.
      * @return This builder for chaining.
      */
     public Builder setPlayerNumber(int value) {
 
       playerNumber_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 playerNumber = 2;</code>
+     * <code>int32 playerNumber = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearPlayerNumber() {
-      bitField0_ = (bitField0_ & ~0x00000002);
+      bitField0_ = (bitField0_ & ~0x00000008);
       playerNumber_ = 0;
       onChanged();
       return this;
     }
 
-    // @@protoc_insertion_point(builder_scope:ecoheroes.SubscriptionRequest)
+    // @@protoc_insertion_point(builder_scope:ecoheroes.DepositWasteRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:ecoheroes.SubscriptionRequest)
-  private static final com.github.eco_heroes.proto.game_events.SubscriptionRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:ecoheroes.DepositWasteRequest)
+  private static final com.github.eco_heroes.proto.game_events.DepositWasteRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.github.eco_heroes.proto.game_events.SubscriptionRequest();
+    DEFAULT_INSTANCE = new com.github.eco_heroes.proto.game_events.DepositWasteRequest();
   }
 
-  public static com.github.eco_heroes.proto.game_events.SubscriptionRequest getDefaultInstance() {
+  public static com.github.eco_heroes.proto.game_events.DepositWasteRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<SubscriptionRequest>
-      PARSER = new com.google.protobuf.AbstractParser<SubscriptionRequest>() {
+  private static final com.google.protobuf.Parser<DepositWasteRequest>
+      PARSER = new com.google.protobuf.AbstractParser<DepositWasteRequest>() {
     @java.lang.Override
-    public SubscriptionRequest parsePartialFrom(
+    public DepositWasteRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -549,17 +737,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<SubscriptionRequest> parser() {
+  public static com.google.protobuf.Parser<DepositWasteRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<SubscriptionRequest> getParserForType() {
+  public com.google.protobuf.Parser<DepositWasteRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.github.eco_heroes.proto.game_events.SubscriptionRequest getDefaultInstanceForType() {
+  public com.github.eco_heroes.proto.game_events.DepositWasteRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

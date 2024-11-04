@@ -6,7 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.eco_heroes.proto.rooms.JoinRequest;
+import com.github.eco_heroes.proto.rooms.RoomsGrpc;
 import com.github.eco_heroes.screens.MainMenuScreen;
+import com.github.eco_heroes.services.RoomsClient;
+import com.google.protobuf.BlockingRpcChannel;
+import com.google.protobuf.Empty;
+import com.google.protobuf.EmptyOrBuilder;
+import io.grpc.Channel;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
@@ -21,6 +27,13 @@ public class Main extends Game {
 
     //GRPC TESTS
     public Main() {
+        var roomsClient = new RoomsClient();
+
+        var newRoom = roomsClient.blockingStub.createAndJoin(Empty.newBuilder().build());
+        var rooms = roomsClient.blockingStub.fetch(Empty.newBuilder().build());
+
+        System.out.println(newRoom);
+        System.out.println(rooms);
     }
 
     //x.x.x.x.x  <--- yo
