@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/eco-heroes/server/game"
 	pb "github.com/eco-heroes/server/proto/gameevents"
@@ -67,6 +68,30 @@ func (*GameEventsService) StartGame(_ context.Context, sgr *pb.StartGameRequest)
 
 	newGame.Start()
 	return out, nil
+}
+
+func (*GameEventsService) DepositWaste(_ context.Context, dwr *pb.DepositWasteRequest) (*emptypb.Empty, error) {
+	room := game.FindActiveRoom(dwr.RoomId)
+	if room == nil {
+		return nil, errors.New("room not found")
+	}
+
+	player, _ := room.FindPlayer(int(dwr.PlayerNumber))
+	if player == nil {
+		return nil, errors.New("player not found")
+	}
+
+	isWasteProperlyDisposed := game.IsWasteProperlyDisposed(dwr.Container, dwr.Waste)
+
+	if !isWasteProperlyDisposed {
+		player.Match.Lives--
+		room.Notify(&pb.ServerEvent{Event: pb.ServerEvent_LifeLostEvt{LifeLostEvt: pb.LifeLost{
+			Lives:        int32(player.Match.Lives),
+			PlayerNumber: int32(player.Number),
+		}}})
+	}
+
+	return nil, nil
 }
 
 func listenAndHandleEvents(conn *game.Connection, errCh chan error) {

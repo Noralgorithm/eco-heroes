@@ -9,12 +9,11 @@ import (
 
 type Room struct {
 	Id      uuid.UUID
-	Matches []Match
 	Players []*Player
 }
 
 func NewRoom() Room {
-	return Room{Id: uuid.New(), Players: []*Player{}, Matches: []Match{}}
+	return Room{Id: uuid.New(), Players: []*Player{}}
 }
 
 func CreateRoom() *Room {
@@ -51,7 +50,6 @@ func (r *Room) RemovePlayer(playerNumber int) error {
 }
 
 func (r *Room) FindPlayer(playerNumber int) (*Player, int) {
-
 	for i, player := range r.Players {
 		if player.Number == playerNumber {
 			return player, i

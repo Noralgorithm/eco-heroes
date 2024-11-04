@@ -5,6 +5,8 @@ option java_multiple_files = true;
 option java_package = "com.github.eco_heroes.proto.game_events";
 option java_outer_classname = "GameEventsProto";
 
+import 'google/protobuf/empty.proto';
+
 package ecoheroes;
 
 enum WasteType {
@@ -14,16 +16,26 @@ enum WasteType {
   PLASTIC_DETERGENT_BOTTLE = 3;
   PAPER_NEWSPAPER = 4;
   PAPER_BAG = 5;
-  GLASS_SODA_BOTTLE = 6;
-  GLASS_JAR = 7;
-  GLASS_BOTTLE = 8;
-  METAL_SMALL_CAN = 9;
-  METAL_CAN = 10;
-  METAL_SODA_CAN = 11;
-  POLYSTYRENE_CUP = 12;
-  PIZZA_BOX = 13;
-  MUG = 14;
-  AEROSOL_CAN = 15;
+  PAPER_BOX = 6;
+  GLASS_SODA_BOTTLE = 7;
+  GLASS_JAR = 8;
+  GLASS_BOTTLE = 9;
+  METAL_SMALL_CAN = 10;
+  METAL_CAN = 11;
+  METAL_SODA_CAN = 12;
+  POLYSTYRENE_CUP = 13;
+  PIZZA_BOX = 14;
+  MUG = 15;
+  AEROSOL_CAN = 16;
+}
+
+enum ContainerType {
+  CONTAINER_TYPE_UNKNOWN = 0;
+  YELLOW = 1;
+  GREEN = 2;
+  BLUE = 3;
+  BROWN = 4;
+  DUMP = 5;
 }
 
 //TODO SEE HOW USE THE ROOMDATAREPLY FORM ROOMS.PROTO
@@ -85,7 +97,16 @@ message ServerEvent {
   }
 }
 
+message DepositWasteRequest {
+  WasteType waste = 1;
+  ContainerType container = 2;
+  string roomId = 3;
+  int32 playerNumber = 4;
+
+}
+
 service GameEvents {
   rpc subscribe(SubscriptionRequest) returns (stream ServerEvent);
   rpc startGame(StartGameRequest) returns (RoomGameDataReply);
+  rpc depositWaste(DepositWasteRequest) returns (google.protobuf.Empty);
 }

@@ -21,7 +21,6 @@ public class Main extends Game {
 
     //GRPC TESTS
     public Main() {
-        var jr = new Room();
     }
 
     //x.x.x.x.x  <--- yo
