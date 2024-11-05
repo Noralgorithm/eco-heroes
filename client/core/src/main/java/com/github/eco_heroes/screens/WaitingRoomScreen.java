@@ -59,7 +59,7 @@ public class WaitingRoomScreen implements Screen {
                 case PLAYERREMOVEDEVT -> roomData.decrementPlayerCount();
                 case GAMESTARTEDEVT -> {
                     Gdx.app.postRunnable(() -> {
-                        game.setScreen(new GameScreen(game));
+                        game.setScreen(new GameScreen(game, roomData));
                     });
 
                 } // Transition to the game screen

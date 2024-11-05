@@ -4,19 +4,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.github.eco_heroes.proto.game_events.WasteType;
 
 import java.awt.*;
 
 public abstract class TrashElement extends Actor {
     protected Texture texture;
-    protected String type;
+    protected WasteType type;
     protected Rectangle bounds;
     protected int originalX;
     protected int originalY;
     protected boolean isDragging;
     protected Array<TrashContainerElement> containers;
 
-    public TrashElement(Texture texture, String type, Rectangle bounds, int originalX, int originalY) {
+    public TrashElement(Texture texture, WasteType type, Rectangle bounds, int originalX, int originalY) {
         this.texture = texture;
         this.type = type;
         this.bounds = bounds;
@@ -35,7 +36,7 @@ public abstract class TrashElement extends Actor {
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
-    public String getType() {
+    public WasteType getType() {
         return type;
     }
 

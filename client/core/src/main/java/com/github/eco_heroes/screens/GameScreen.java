@@ -9,9 +9,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eco_heroes.Main;
+import com.github.eco_heroes.models.Room;
+import com.github.eco_heroes.proto.game_events.WasteType;
+import com.github.eco_heroes.server_events.ServerEventsObservable;
 import com.github.eco_heroes.utils.GameState;
 import com.github.eco_heroes.utils.TrashElementUtils;
 import com.github.eco_heroes.actors.*;
+import com.github.eco_heroes.utils.WasteDisposer;
 
 import java.util.Random;
 
@@ -22,6 +26,7 @@ public class GameScreen implements Screen {
     private final Stage stage;
     private final TrashElementUtils trashElementUtils;
     private long lastTrashElementTime;
+    private Room room;
 
     //textures
     Texture bottleTexture;
@@ -59,11 +64,39 @@ public class GameScreen implements Screen {
     GreenContainer greenContainer;
     AnimatedTile animatedTile;
 
-    public GameScreen(final Main game){
+    public GameScreen(final Main game, Room room){
         this.game = game;
+        this.room = room;
         stage = new Stage(new ScreenViewport());
         random = new Random();
         trashElementUtils = new TrashElementUtils();
+
+        GameState.setPlayersCount(room.getPlayerCount());
+
+        WasteDisposer.setPlayerNumber(room.getMe());
+        WasteDisposer.setRoomId(room.getId());
+
+        ServerEventsObservable.addObserver(event -> {
+            switch (event.getEventCase()) {
+                case WASTEGENERATEDEVT -> {
+                    spawnTrashItem(event.getWasteGeneratedEvt().getWaste());
+                }
+                case LIFELOSTEVT -> {
+                    var playerNumber = event.getLifeLostEvt().getPlayerNumber();
+                    GameState.getInstance().loseLife(playerNumber);
+                }
+                case GAMEENDEDEVT -> {
+                    var winnerNumber = event.getGameEndedEvt().getWinnerNumber();
+
+                    if (winnerNumber == room.getMe()) {
+                        //TODO: Go to WinScreen
+                    }
+
+                    game.setScreen(new GameOverScreen(game));
+                }
+            }
+        });
+
         Gdx.input.setInputProcessor(stage);
 
         containers = new Array<TrashContainerElement>();
@@ -115,31 +148,8 @@ public class GameScreen implements Screen {
 
     }
 
-    private void spawnTrashItem() {
-        enum itemsEnum {
-            WASTE_TYPE_UNKNOWN,
-            PLASTIC_BOTTLE,
-            PLASTIC_JUG,
-            PLASTIC_DETERGENT_BOTTLE,
-            PAPER_NEWSPAPER,
-            PAPER_BAG,
-            PAPER_BOX,
-            GLASS_SODA_BOTTLE,
-            GLASS_JAR,
-            GLASS_BOTTLE,
-            METAL_SMALL_CAN,
-            METAL_CAN,
-            METAL_SODA_CAN,
-            POLYSTYRENE_CUP,
-            PIZZA_BOX,
-            MUG,
-            AEROSOL_CAN
-        }
-
-        itemsEnum randomItem = itemsEnum.values()[random.nextInt(itemsEnum.values().length)];
-
-        randomItem = itemsEnum.PLASTIC_JUG;
-        switch (randomItem) {
+    private void spawnTrashItem(WasteType waste) {
+        switch (waste) {
             case PLASTIC_BOTTLE:
                 System.out.println("bottle");
                 PlasticBottle newBottle = new PlasticBottle(bottleTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), yellowContainer, containers);
@@ -304,7 +314,7 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.font.draw(game.batch, "Vidas: " + GameState.getInstance().getLives(), 50, 50);
+        game.font.draw(game.batch, "Vidas: " + GameState.getInstance().getLives(room.getMe()), 50, 50);
         animatedTile.drawRow(game.batch, 0, 90, 15);
         game.batch.end();
 
@@ -315,11 +325,8 @@ public class GameScreen implements Screen {
             trashElement.update(delta);
         }
 
-        if (TimeUtils.nanoTime() - lastTrashElementTime > 5000000000L)
-            spawnTrashItem();
 
-
-        if (GameState.getInstance().getLives() <= 0) {
+        if (GameState.getInstance().getLives(room.getMe()) <= 0) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }

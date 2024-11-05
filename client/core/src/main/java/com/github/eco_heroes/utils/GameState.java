@@ -1,13 +1,20 @@
 package com.github.eco_heroes.utils;
 
-import com.github.eco_heroes.screens.GameScreen;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameState {
     private static GameState instance;
-    private int lives;
+    private Map<Integer, Integer> playersLives;
+
+    public static int playersCount;
 
     private GameState() {
-        lives = 3;
+        playersLives = new HashMap<>();
+
+        for (int i = 1; i <= playersCount; i++) {
+            playersLives.put(i, 3);
+        }
     }
 
     public static GameState getInstance() {
@@ -17,20 +24,23 @@ public class GameState {
         return instance;
     }
 
-    public int getLives() {
-        return lives;
+    public int getLives(int playerNumber) {
+        return playersLives.get(playerNumber);
     }
 
-    public void loseLife() {
-        lives--;
-        if (lives <= 0) {
+    public void loseLife(int playerNumber) {
+        var newPlayerLives = playersLives.get(playerNumber) - 1;
+        playersLives.put(playerNumber, newPlayerLives);
+
+        if (newPlayerLives <= 0) {
             System.out.println("¡Game Over!");
         } else {
-            System.out.println("Vida perdida. Vidas restantes: " + lives);
+            System.out.println("Vida perdida. Vidas restantes: " + playersLives);
         }
     }
 
-    public void resetLives() {
-        lives = 3;
+
+    public static void setPlayersCount(int playersCount) {
+        GameState.playersCount = playersCount;
     }
 }
