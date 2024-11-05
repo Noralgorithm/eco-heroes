@@ -42,13 +42,16 @@ public class PlasticDetergentBottle extends TrashElement {
                 isDragging = false;
 
                 if (droppedOverNothing()){
+                    dropSound.play();
                     System.out.println(originalX+"lala"+originalY);
                     setPosition(originalX, originalY);
                 } else if (getBounds().intersects(correctContainer.getBounds())) {
+                    dropSound.play();
                     WasteDisposer.dispose(type, correctContainer.type);
                     System.out.println("¡La botella de detergente ha sido colocada en el contenedor!");
                     remove();
                 } else {
+                    wrongSound.play();
                     WasteDisposer.dispose(type, ContainerType.CONTAINER_TYPE_UNKNOWN);
                     System.out.println("Te equivocaste >:(");
                     remove();

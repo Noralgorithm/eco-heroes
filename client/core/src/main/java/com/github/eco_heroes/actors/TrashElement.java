@@ -1,5 +1,7 @@
 package com.github.eco_heroes.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,6 +18,8 @@ public abstract class TrashElement extends Actor {
     protected int originalY;
     protected boolean isDragging;
     protected Array<TrashContainerElement> containers;
+    protected Sound dropSound;
+    protected Sound wrongSound;
 
     public TrashElement(Texture texture, WasteType type, Rectangle bounds, int originalX, int originalY) {
         this.texture = texture;
@@ -23,6 +27,12 @@ public abstract class TrashElement extends Actor {
         this.bounds = bounds;
         this.originalX = originalX;
         this.originalY = originalY;
+
+        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
+        wrongSound = Gdx.audio.newSound(Gdx.files.internal("wrong_drop.mp3"));
+
+
+
 
         setSize(texture.getWidth(), texture.getHeight()); // Set size based on texture
     }

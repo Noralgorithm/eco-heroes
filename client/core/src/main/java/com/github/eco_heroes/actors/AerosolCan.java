@@ -1,5 +1,7 @@
 package com.github.eco_heroes.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -42,13 +44,15 @@ public class AerosolCan extends TrashElement {
                 isDragging = false;
 
                 if (droppedOverNothing()){
-                    System.out.println(originalX+"lala"+originalY);
+                    dropSound.play();
                     setPosition(originalX, originalY);
                 } else if (getBounds().intersects(correctContainer.getBounds())) {
+                    dropSound.play();
                     WasteDisposer.dispose(type, correctContainer.type);
                     System.out.println("¡La AerosolCan can ha sido colocada en el contenedor!");
                     remove();
                 } else {
+                    wrongSound.play();
                     WasteDisposer.dispose(type, ContainerType.CONTAINER_TYPE_UNKNOWN);
                     System.out.println("Te equivocaste >:(");
                     remove();

@@ -42,13 +42,15 @@ public class GlassJar extends TrashElement {
                 isDragging = false;
 
                 if (droppedOverNothing()){
-                    System.out.println(originalX+"lala"+originalY);
+                    dropSound.play();
                     setPosition(originalX, originalY);
                 } else if (getBounds().intersects(correctContainer.getBounds())) {
+                    dropSound.play();
                     WasteDisposer.dispose(type, correctContainer.type);
                     System.out.println("¡La glass jar ha sido colocada en el contenedor!");
                     remove();
                 } else {
+                    wrongSound.play();
                     WasteDisposer.dispose(type, ContainerType.CONTAINER_TYPE_UNKNOWN);
                     System.out.println("Te equivocaste >:(");
                     remove();

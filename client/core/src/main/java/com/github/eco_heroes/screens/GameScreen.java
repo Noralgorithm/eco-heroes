@@ -34,6 +34,7 @@ public class GameScreen implements Screen {
     private Room room;
     private Label myLivesLabel;
     private Label[] playerLivesLabels;
+    private int changeScreen;
 
     //textures
     Texture bottleTexture;
@@ -64,7 +65,6 @@ public class GameScreen implements Screen {
     private Array<TrashElement> trashElements;
     private Array<TrashContainerElement> containers;
     private int lives;
-    private int points;
 
     //actors
     BlueContainer blueContainer;
@@ -82,6 +82,7 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         random = new Random();
         trashElementUtils = new TrashElementUtils();
+        changeScreen = 0;
 
         GameState.setPlayersCount(room.getPlayerCount());
 
@@ -98,14 +99,17 @@ public class GameScreen implements Screen {
                     GameState.getInstance().loseLife(playerNumber);
                 }
                 case GAMEENDEDEVT -> {
-                    var winnerNumber = event.getGameEndedEvt().getWinnerNumber();
+                    var winnerNumber = event.getGameEndedEvt().getWinnerNumber()+1;
+                    System.out.println(winnerNumber);
 
                     if (winnerNumber == room.getMe()) {
-                        game.setScreen(new GameWinScreen(game));
+                        changeScreen = 1;
+                        //game.setScreen(new GameWinScreen(game));
                     } else {
-                        game.setScreen(new GameOverScreen(game));
+                        changeScreen = 2;
+                        //game.setScreen(new GameOverScreen(game));
+                        //dispose();
                     }
-
                 }
             }
         });
@@ -115,7 +119,6 @@ public class GameScreen implements Screen {
 
         containers = new Array<TrashContainerElement>();
         trashElements = new Array<TrashElement>();
-        points = 0;
 
         //Textures
         //--TrashItems
@@ -381,7 +384,10 @@ public class GameScreen implements Screen {
         }
 
 
-        if (GameState.getInstance().getLives(room.getMe()) <= 0) {
+        if (changeScreen == 1) {
+            game.setScreen(new GameWinScreen(game));
+            dispose();
+        } else if (changeScreen == 1) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
