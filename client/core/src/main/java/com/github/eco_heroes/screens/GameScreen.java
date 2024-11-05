@@ -100,6 +100,10 @@ public class GameScreen implements Screen {
                 case LIFELOSTEVT -> {
                     var playerNumber = event.getLifeLostEvt().getPlayerNumber();
                     GameState.getInstance().loseLife(playerNumber);
+
+                    if (GameState.getInstance().getLives(room.getMe()) == 0) {
+                        changeScreen = 2;
+                    }
                 }
                 case GAMEENDEDEVT -> {
                     var winnerNumber = event.getGameEndedEvt().getWinnerNumber();
