@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.eco_heroes.Main;
 
-public class GameOverScreen implements Screen {
+public class GameWinScreen implements Screen {
     final Main game;
     Texture bgTexture;
 
-    public GameOverScreen(final Main game) {
+    public GameWinScreen(final Main game) {
         this.game = game;
 
         bgTexture = new Texture("bg.png");
@@ -30,7 +30,7 @@ public class GameOverScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(bgTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.font.draw(game.batch, "GameOver", 100, 150);
+        game.font.draw(game.batch, "Ganaste!", 150, 150);
         game.batch.end();
     }
 

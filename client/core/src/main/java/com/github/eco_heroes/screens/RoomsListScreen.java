@@ -58,6 +58,7 @@ public class RoomsListScreen implements Screen {
     }
 
     private void updateUI() {
+        System.out.println("lolol");
         stage.clear();
         setupUI();
     }
@@ -69,12 +70,21 @@ public class RoomsListScreen implements Screen {
         stage.addActor(table);
 
         // Title
-        //table.pad(16);
         Label titleLabel = new Label("Salas de Juego Actuales", skin);
         titleLabel.setColor(Color.BLACK);
         titleLabel.setAlignment(Align.center);
-        //titleLabel.setFontScale(1f);
         table.add(titleLabel).growX().colspan(3);
+
+        //refresh button
+        table.row();
+        TextButton refreshButton = new TextButton("Refrescar", skin);
+        refreshButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                fetchRooms();
+            }
+        });
+        table.add(refreshButton).growX().colspan(3).pad(10).padBottom(25);
 
         // Display rooms
         for (Room room : rooms) {

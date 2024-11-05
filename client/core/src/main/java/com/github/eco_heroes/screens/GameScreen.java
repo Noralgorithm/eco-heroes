@@ -2,9 +2,14 @@ package com.github.eco_heroes.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -27,6 +32,8 @@ public class GameScreen implements Screen {
     private final TrashElementUtils trashElementUtils;
     private long lastTrashElementTime;
     private Room room;
+    private Label myLivesLabel;
+    private Label[] playerLivesLabels;
 
     //textures
     Texture bottleTexture;
@@ -49,6 +56,7 @@ public class GameScreen implements Screen {
     Texture blueContainerTexture;
     Texture yellowContainerTexture;
     Texture greenContainerTexture;
+    Texture brownContainerTexture;
 
     Texture backgroundTexture;
 
@@ -62,7 +70,11 @@ public class GameScreen implements Screen {
     BlueContainer blueContainer;
     YellowContainer yellowContainer;
     GreenContainer greenContainer;
+    BrownContainer brownContainer;
     AnimatedTile animatedTile;
+
+    //ui
+    private Skin skin;
 
     public GameScreen(final Main game, Room room){
         this.game = game;
@@ -89,7 +101,7 @@ public class GameScreen implements Screen {
                     var winnerNumber = event.getGameEndedEvt().getWinnerNumber();
 
                     if (winnerNumber == room.getMe()) {
-                        //TODO: Go to WinScreen
+                        game.setScreen(new GameWinScreen(game));
                     } else {
                         game.setScreen(new GameOverScreen(game));
                     }
@@ -99,6 +111,7 @@ public class GameScreen implements Screen {
         });
 
         Gdx.input.setInputProcessor(stage);
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
         containers = new Array<TrashContainerElement>();
         trashElements = new Array<TrashElement>();
@@ -128,25 +141,65 @@ public class GameScreen implements Screen {
         blueContainerTexture = new Texture("container_blue.png");
         yellowContainerTexture = new Texture("container_yellow.png");
         greenContainerTexture = new Texture("container_green.png");
+        brownContainerTexture = new Texture("null_container.png");
 
         //Actors
         animatedTile = new AnimatedTile();
-        blueContainer = new BlueContainer(blueContainerTexture, 100, 300);
-        blueContainer.setPosition(100, 300);
-        yellowContainer = new YellowContainer(yellowContainerTexture, 300, 300);
-        yellowContainer.setPosition(300, 300);
-        greenContainer = new GreenContainer(greenContainerTexture, 500, 300);
-        greenContainer.setPosition(500, 300);
+        blueContainer = new BlueContainer(blueContainerTexture, 50, 300);
+        blueContainer.setPosition(50, 300);
+        yellowContainer = new YellowContainer(yellowContainerTexture, 225, 300);
+        yellowContainer.setPosition(225, 300);
+        greenContainer = new GreenContainer(greenContainerTexture, 400, 300);
+        greenContainer.setPosition(400, 300);
+        brownContainer = new BrownContainer(brownContainerTexture, 575, 300);
+        brownContainer.setPosition(575, 300);
         containers.add(blueContainer);
         containers.add(yellowContainer);
         containers.add(greenContainer);
+        containers.add(brownContainer);
 
         //stage
         stage.addActor(blueContainer);
         stage.addActor(yellowContainer);
         stage.addActor(greenContainer);
+        stage.addActor(brownContainer);
+
+        //ui
+        setupUI();
 
 
+    }
+
+    private void setupUI(){
+        Table table = new Table();
+        table.setFillParent(true);
+        table.bottom();
+        stage.addActor(table);
+
+        Label livesLabel = new Label("Vidas", skin);
+        livesLabel.setColor(Color.BLACK);
+        livesLabel.setAlignment(Align.center);
+        table.add(livesLabel).growX().colspan(4).spaceBottom(5);
+
+        //my lives
+        table.row().padBottom(5);
+        myLivesLabel = new Label("Yo: " + GameState.getInstance().getLives(room.getMe()), skin);
+        myLivesLabel.setColor(Color.BLACK);
+        myLivesLabel.setFontScale(0.7f);
+        myLivesLabel.setAlignment(Align.center);
+        table.add(myLivesLabel).growX();
+
+        //others players
+        playerLivesLabels = new Label[room.getPlayerCount() - 1]; // No cuenta el jugador actual
+        for (int i = 1; i <= room.getPlayerCount(); i++) {
+            if (i != room.getMe()) {
+                playerLivesLabels[i - 1] = new Label("P" + i + ": " + GameState.getInstance().getLives(i), skin);
+                playerLivesLabels[i - 1].setColor(Color.BLACK);
+                playerLivesLabels[i - 1].setFontScale(0.7f);
+                playerLivesLabels[i - 1].setAlignment(Align.center);
+                table.add(playerLivesLabels[i - 1]).growX();
+            }
+        }
     }
 
     private void spawnTrashItem(WasteType waste) {
@@ -262,7 +315,7 @@ public class GameScreen implements Screen {
 
             case POLYSTYRENE_CUP:
                 System.out.println("polystyrene cup");
-                PolystyreneCup newPolystyreneCup = new PolystyreneCup(polystyreneCupTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), blueContainer, containers);
+                PolystyreneCup newPolystyreneCup = new PolystyreneCup(polystyreneCupTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), brownContainer, containers);
                 newPolystyreneCup.setPosition(trashElementUtils.getInitialX(), trashElementUtils.getInitialY());
 
                 stage.addActor(newPolystyreneCup);
@@ -271,7 +324,7 @@ public class GameScreen implements Screen {
 
             case PIZZA_BOX:
                 System.out.println("pizza box");
-                PizzaBox newPizzaBox = new PizzaBox(pizzaBoxTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), blueContainer, containers);
+                PizzaBox newPizzaBox = new PizzaBox(pizzaBoxTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), brownContainer, containers);
                 newPizzaBox.setPosition(trashElementUtils.getInitialX(), trashElementUtils.getInitialY());
 
                 stage.addActor(newPizzaBox);
@@ -280,7 +333,7 @@ public class GameScreen implements Screen {
 
             case MUG:
                 System.out.println("mug");
-                Mug newMug = new Mug(mugTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), blueContainer, containers);
+                Mug newMug = new Mug(mugTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), brownContainer, containers);
                 newMug.setPosition(trashElementUtils.getInitialX(), trashElementUtils.getInitialY());
 
                 stage.addActor(newMug);
@@ -289,7 +342,7 @@ public class GameScreen implements Screen {
 
             case AEROSOL_CAN:
                 System.out.println("aerosol can");
-                AerosolCan newAerosolCan = new AerosolCan(aerosolCanTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), blueContainer, containers);
+                AerosolCan newAerosolCan = new AerosolCan(aerosolCanTexture, trashElementUtils.getInitialX(), trashElementUtils.getInitialY(), brownContainer, containers);
                 newAerosolCan.setPosition(trashElementUtils.getInitialX(), trashElementUtils.getInitialY());
 
                 stage.addActor(newAerosolCan);
@@ -315,11 +368,12 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.font.draw(game.batch, "Vidas: " + GameState.getInstance().getLives(room.getMe()), 50, 50);
-        animatedTile.drawRow(game.batch, 0, 90, 15);
+        animatedTile.drawRow(game.batch, 0, 80, 15);
         game.batch.end();
 
         stage.draw();
+
+        updateUI();
 
 
         for (TrashElement trashElement : trashElements) {
@@ -330,6 +384,16 @@ public class GameScreen implements Screen {
         if (GameState.getInstance().getLives(room.getMe()) <= 0) {
             game.setScreen(new GameOverScreen(game));
             dispose();
+        }
+    }
+
+    private void updateUI() {
+        myLivesLabel.setText("Yo: " + GameState.getInstance().getLives(room.getMe()));
+
+        for (int i = 1; i <= room.getPlayerCount(); i++) {
+            if (i != room.getMe()) {
+                playerLivesLabels[i - 1].setText("P" + i + ": " + GameState.getInstance().getLives(i));
+            }
         }
     }
 
