@@ -22,6 +22,7 @@ import com.github.eco_heroes.utils.TrashElementUtils;
 import com.github.eco_heroes.actors.*;
 import com.github.eco_heroes.utils.WasteDisposer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameScreen implements Screen {
@@ -33,7 +34,7 @@ public class GameScreen implements Screen {
     private long lastTrashElementTime;
     private Room room;
     private Label myLivesLabel;
-    private Label[] playerLivesLabels;
+    private ArrayList<Label> playerLivesLabels = new ArrayList<>();
     private int changeScreen;
 
     //textures
@@ -99,8 +100,7 @@ public class GameScreen implements Screen {
                     GameState.getInstance().loseLife(playerNumber);
                 }
                 case GAMEENDEDEVT -> {
-                    var winnerNumber = event.getGameEndedEvt().getWinnerNumber()+1;
-                    System.out.println(winnerNumber);
+                    var winnerNumber = event.getGameEndedEvt().getWinnerNumber();
 
                     if (winnerNumber == room.getMe()) {
                         changeScreen = 1;
@@ -193,14 +193,14 @@ public class GameScreen implements Screen {
         table.add(myLivesLabel).growX();
 
         //others players
-        playerLivesLabels = new Label[room.getPlayerCount() - 1]; // No cuenta el jugador actual
-        for (int i = 1; i <= room.getPlayerCount(); i++) {
-            if (i != room.getMe()) {
-                playerLivesLabels[i - 1] = new Label("P" + i + ": " + GameState.getInstance().getLives(i), skin);
-                playerLivesLabels[i - 1].setColor(Color.BLACK);
-                playerLivesLabels[i - 1].setFontScale(0.7f);
-                playerLivesLabels[i - 1].setAlignment(Align.center);
-                table.add(playerLivesLabels[i - 1]).growX();
+         // No cuenta el jugador actual
+        for (int i = 1; i < room.getPlayerCount(); i++) {
+            if ((i-1) != room.getMe()) {
+                playerLivesLabels.add(new Label("P" + i + ": " + GameState.getInstance().getLives(i), skin));
+                playerLivesLabels.get(i-1).setColor(Color.BLACK);
+                playerLivesLabels.get(i-1).setFontScale(0.7f);
+                playerLivesLabels.get(i-1).setAlignment(Align.center);
+                table.add(playerLivesLabels.get(i-1)).growX();
             }
         }
     }
@@ -384,10 +384,11 @@ public class GameScreen implements Screen {
         }
 
 
+        System.out.println(changeScreen);
         if (changeScreen == 1) {
             game.setScreen(new GameWinScreen(game));
             dispose();
-        } else if (changeScreen == 1) {
+        } else if (changeScreen == 2) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
@@ -396,9 +397,9 @@ public class GameScreen implements Screen {
     private void updateUI() {
         myLivesLabel.setText("Yo: " + GameState.getInstance().getLives(room.getMe()));
 
-        for (int i = 1; i <= room.getPlayerCount(); i++) {
-            if (i != room.getMe()) {
-                playerLivesLabels[i - 1].setText("P" + i + ": " + GameState.getInstance().getLives(i));
+        for (int i = 1; i <= room.getPlayerCount() -1; i++) {
+            if ((i-1) != room.getMe()) {
+                playerLivesLabels.get(i-1).setText("P" + i + ": "+ GameState.getInstance().getLives(i));
             }
         }
     }
