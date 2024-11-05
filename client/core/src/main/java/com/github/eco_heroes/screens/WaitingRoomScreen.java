@@ -13,11 +13,15 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eco_heroes.Main;
+import com.github.eco_heroes.ServerUrl;
+import com.github.eco_heroes.grpc.GameEventsClient;
 import com.github.eco_heroes.grpc.RoomsClient;
 import com.github.eco_heroes.models.Player;
 import com.github.eco_heroes.models.Room;
 import com.github.eco_heroes.proto.rooms.RoomDataReply;
 import com.github.eco_heroes.proto.rooms.RoomsListReply;
+
+import java.util.ArrayList;
 
 public class WaitingRoomScreen implements Screen {
     private final Main game; // Your main game class
@@ -30,9 +34,13 @@ public class WaitingRoomScreen implements Screen {
     private boolean nameSet; // Flag to track if the name has been set
     private java.util.List<Room> rooms;
     private RoomsListReply reply;
+    private RoomDataReply roomData;
 
-    public WaitingRoomScreen(final Main game) {
+
+    public WaitingRoomScreen(final Main game, RoomDataReply roomData) {
         this.game = game;
+        this.roomData = roomData;
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
@@ -41,11 +49,17 @@ public class WaitingRoomScreen implements Screen {
 
         players = new Array<>();
         nameSet = false; // Initialize the flag
-        fetchRooms();
 
+        subscribeToGameEvents();
         setupUI();
     }
 
+
+    private void subscribeToGameEvents() {
+        var gameEventsClient = GameEventsClient.getInstance(ServerUrl.HOST, ServerUrl.PORT);
+
+        gameEventsClient.subscribe(roomData.getId(), roomData.getMe().getNumber());
+    }
 
 
     private void setupUI() {
@@ -67,10 +81,24 @@ public class WaitingRoomScreen implements Screen {
         listTitleLabel.setColor(Color.BLACK);
         table.add(listTitleLabel).spaceBottom(16);
 
+        var playersCount = roomData.getPlayersCount();
+        var playersList = new ArrayList<String>();
+
+        for (var i = 1; i <= playersCount; i++) {
+            if (i == roomData.getMe().getNumber()) {
+                playersList.add("Jugador " + i + " (Tú)");
+            } else {
+                playersList.add("Jugador " + i);
+            }
+        }
+
+        String[] playersArray = new String[playersList.size()];
+        playersArray = playersList.toArray(playersArray);
+
         // Initialize the player list display
-        nameListUi = new List<>(skin);
+        nameListUi = new List<String>(skin);
         nameListUi.setColor(Color.CLEAR);
-        nameListUi.setItems(players); // Set initial items
+        nameListUi.setItems(playersArray); // Set initial items
         table.row();
         table.add(nameListUi).expandX(); // Add the list to the table
 
@@ -99,20 +127,6 @@ public class WaitingRoomScreen implements Screen {
 
             }
         });
-    }
-
-    private void fetchRooms() {
-        RoomsListReply reply = game.getRoomsClient().fetchRooms();
-        
-
-        System.out.println("lololo");
-        for (RoomDataReply roomData : reply.getRoomsList()) {
-            if (roomData.getMe().getNumber() != 0) {
-                ro = new Room(roomData.getId(), roomData.getPlayersCount(), roomData.getMe().getNumber());
-            }
-        }
-
-        //updateUI();
     }
 
     private void updateUI() {

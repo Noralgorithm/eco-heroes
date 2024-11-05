@@ -48,7 +48,7 @@ public class RoomsListScreen implements Screen {
 
         rooms.clear();
         for (RoomDataReply roomData : reply.getRoomsList()) {
-            rooms.add(new Room(roomData.getId(), roomData.getPlayersCount(), roomData.getMe().getNumber()));
+            rooms.add(new Room(roomData.getId(), roomData.getPlayersCount(), roomData.getPlayersLimit(), roomData.getMe().getNumber()));
         }
         updateUI();
     }
@@ -77,7 +77,7 @@ public class RoomsListScreen implements Screen {
             Label nameLabel = new Label("Sala " + room.getId(), skin);
             nameLabel.setColor(Color.BLACK);
             table.add(nameLabel);
-            Label playerCount = new Label("Jugadores: " + room.getPlayerCount(), skin);
+            Label playerCount = new Label("Jugadores: " + room.getPlayerCount() + "/" + room.getPlayersLimit(), skin);
             playerCount.setColor(Color.BLACK);
             table.add(playerCount);
 
@@ -104,13 +104,14 @@ public class RoomsListScreen implements Screen {
     }
 
     private void createNewRoom() {
-        game.getRoomsClient().createAndJoinRoom(); // Create the room on the server
-        game.setScreen(new WaitingRoomScreen(game)); // Change to the waiting room screen
+        var res = game.getRoomsClient().createAndJoinRoom(); // Create the room on the server
+        game.setScreen(new WaitingRoomScreen(game, res)); // Change to the waiting room screen
     }
 
     private void joinRoom(String id) {
-        game.getRoomsClient().joinRoom(id); // Join the room on the server
-        game.setScreen(new WaitingRoomScreen(game)); // Change to the waiting room screen
+        var res = game.getRoomsClient().joinRoom(id); // Join the room on the server
+
+        game.setScreen(new WaitingRoomScreen(game, res)); // Change to the waiting room screen
     }
 
     @Override
