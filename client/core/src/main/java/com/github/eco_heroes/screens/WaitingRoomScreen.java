@@ -13,7 +13,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eco_heroes.Main;
+import com.github.eco_heroes.grpc.RoomsClient;
 import com.github.eco_heroes.models.Player;
+import com.github.eco_heroes.models.Room;
+import com.github.eco_heroes.proto.rooms.RoomDataReply;
+import com.github.eco_heroes.proto.rooms.RoomsListReply;
 
 public class WaitingRoomScreen implements Screen {
     private final Main game; // Your main game class
@@ -24,6 +28,8 @@ public class WaitingRoomScreen implements Screen {
     private Array<Player> players;
     private Texture backgroundTexture;
     private boolean nameSet; // Flag to track if the name has been set
+    private java.util.List<Room> rooms;
+    private RoomsListReply reply;
 
     public WaitingRoomScreen(final Main game) {
         this.game = game;
@@ -34,13 +40,15 @@ public class WaitingRoomScreen implements Screen {
         backgroundTexture = new Texture("background.png");
 
         players = new Array<>();
-        players.add(new Player("lol"));
         nameSet = false; // Initialize the flag
+        fetchRooms();
 
-        setUpUI();
+        setupUI();
     }
 
-    private void setUpUI() {
+
+
+    private void setupUI() {
         Table table = new Table();
         table.pad(16);
         table.setDebug(true);
@@ -52,41 +60,6 @@ public class WaitingRoomScreen implements Screen {
         titleLabel.setColor(Color.BLACK);
         titleLabel.setAlignment(Align.center);
         table.add(titleLabel).growX().spaceBottom(32).center();
-
-        // Player's name
-        table.row();
-        Table playerNameTable = new Table();
-        playerNameTable.defaults().space(8);
-        Label nameLabel = new Label("Ingresa tu nombre: ", skin);
-        nameLabel.setColor(Color.BLACK);
-        playerNameTable.add(nameLabel);
-
-        nameInputFieldUi = new TextField("", skin);
-        nameInputFieldUi.setColor(Color.WHITE);
-        playerNameTable.add(nameInputFieldUi);
-
-        TextButton setNameButton = new TextButton("Unirse", skin);
-        setNameButton.setColor(Color.GRAY);
-        playerNameTable.add(setNameButton);
-        table.add(playerNameTable).spaceBottom(15).width(64);
-
-        setNameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String name = nameInputFieldUi.getText();
-                if (!name.isEmpty() && !nameSet) { // Check if the name has not been set yet
-                    players.add(new Player(name)); // Add the player to the array
-                    nameInputFieldUi.setText(""); // Clear the input field
-                    nameSet = true; // Set the flag to true
-                    nameInputFieldUi.setDisabled(true); // Disable the input field
-                    setNameButton.setDisabled(true); // Disable the button
-
-                    // Update the player list display
-                    updatePlayerListDisplay();
-                }
-            }
-        });
-
 
         // Players list
         table.row();
@@ -126,6 +99,25 @@ public class WaitingRoomScreen implements Screen {
 
             }
         });
+    }
+
+    private void fetchRooms() {
+        RoomsListReply reply = game.getRoomsClient().fetchRooms();
+        
+
+        System.out.println("lololo");
+        for (RoomDataReply roomData : reply.getRoomsList()) {
+            if (roomData.getMe().getNumber() != 0) {
+                ro = new Room(roomData.getId(), roomData.getPlayersCount(), roomData.getMe().getNumber());
+            }
+        }
+
+        //updateUI();
+    }
+
+    private void updateUI() {
+        stage.clear();
+        setupUI();
     }
 
     private void updatePlayerListDisplay() {
