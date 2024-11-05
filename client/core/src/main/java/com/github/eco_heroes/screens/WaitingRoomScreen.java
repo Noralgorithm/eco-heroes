@@ -57,6 +57,12 @@ public class WaitingRoomScreen implements Screen {
                     }
                 }
                 case PLAYERREMOVEDEVT -> roomData.decrementPlayerCount();
+                case GAMESTARTEDEVT -> {
+                    Gdx.app.postRunnable(() -> {
+                        game.setScreen(new GameScreen(game));
+                    });
+
+                } // Transition to the game screen
             }
             updateUI();
             System.out.println("Received server event: " + event);
@@ -128,14 +134,14 @@ public class WaitingRoomScreen implements Screen {
                 nameListUi.setItems(players); // Update the list to show the ready status
 
                 // Transition to the game screen after a short delay
-                Gdx.app.postRunnable(() -> {
-                    try {
-                        Thread.sleep(2000); // Show the ready status for 2 seconds
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    game.setScreen(new GameScreen(game)); // Transition to the game screen
-                });
+
+                try {
+                    Thread.sleep(2000); // Show the ready status for 2 seconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                var gameEventsClient = GameEventsClient.getInstance(ServerUrl.HOST, ServerUrl.PORT);
+                gameEventsClient.startGame(roomData.getId());
 
             }
         });
