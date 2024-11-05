@@ -90,9 +90,10 @@ public class GameScreen implements Screen {
 
                     if (winnerNumber == room.getMe()) {
                         //TODO: Go to WinScreen
+                    } else {
+                        game.setScreen(new GameOverScreen(game));
                     }
 
-                    game.setScreen(new GameOverScreen(game));
                 }
             }
         });
