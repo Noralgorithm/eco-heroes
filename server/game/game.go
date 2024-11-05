@@ -74,21 +74,22 @@ func (g *Game) UpdateGameSpeed() {
 }
 
 func (g *Game) IsGameOver() {
-	var playerLost = false
+
 	var playerWinnerNumber = 0
 	var maxLives = 0
+	var aliveCount = 0
 
 	for _, player := range g.Room.Players {
-		if player.Match.Lives == 0 {
-			playerLost = true
-		}
-		if player.Match.Lives > maxLives {
-			maxLives = player.Match.Lives
-			playerWinnerNumber = player.Number
+		if player.Match.Lives != 0 {
+			aliveCount++
+			if player.Match.Lives > maxLives {
+				maxLives = player.Match.Lives
+				playerWinnerNumber = player.Number
+			}
 		}
 	}
 
-	if playerLost {
+	if aliveCount == 1 {
 		g.Room.Notify(&pb.ServerEvent{Event: &pb.ServerEvent_GameEndedEvt{GameEndedEvt: &pb.GameEnded{
 			WinnerNumber: int32(playerWinnerNumber),
 		}}})
