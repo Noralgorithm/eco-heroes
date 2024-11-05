@@ -1,14 +1,12 @@
-package com.github.eco_heroes;
+package com.github.eco_heroes.server_events;
 
 import com.github.eco_heroes.proto.game_events.ServerEvent;
 import io.grpc.stub.StreamObserver;
 
 public class ServerEventsListener implements StreamObserver<ServerEvent> {
-
     @Override
     public void onNext(ServerEvent serverEvent) {
-        System.out.println("AAAAAAAAAAAAAAAAAAA");
-        System.out.println("RECIEVED SERVER EVENT " + serverEvent);
+       ServerEventsObservable.notifyObservers(serverEvent);
     }
 
     @Override

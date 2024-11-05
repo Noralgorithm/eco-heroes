@@ -105,13 +105,16 @@ public class RoomsListScreen implements Screen {
 
     private void createNewRoom() {
         var res = game.getRoomsClient().createAndJoinRoom(); // Create the room on the server
-        game.setScreen(new WaitingRoomScreen(game, res)); // Change to the waiting room screen
+        var room = new Room(res.getId(), res.getPlayersCount(), res.getPlayersLimit(), res.getMe().getNumber());
+
+        game.setScreen(new WaitingRoomScreen(game, room)); // Change to the waiting room screen
     }
 
     private void joinRoom(String id) {
         var res = game.getRoomsClient().joinRoom(id); // Join the room on the server
+        var room = new Room(res.getId(), res.getPlayersCount(), res.getPlayersLimit(), res.getMe().getNumber());
 
-        game.setScreen(new WaitingRoomScreen(game, res)); // Change to the waiting room screen
+        game.setScreen(new WaitingRoomScreen(game, room)); // Change to the waiting room screen
     }
 
     @Override

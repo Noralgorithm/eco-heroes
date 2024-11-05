@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/eco-heroes/server/game"
@@ -97,6 +98,7 @@ func (*GameEventsService) DepositWaste(_ context.Context, dwr *pb.DepositWasteRe
 func listenAndHandleEvents(conn *game.Connection, errCh chan error) {
 	for {
 		event := <-conn.Channel
+		fmt.Println(event, conn.Stream)
 		err := conn.Stream.Send(event)
 
 		if err != nil {

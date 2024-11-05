@@ -4,10 +4,9 @@ import java.util.List;
 
 public class Room {
     private final String id;
-    private final int playerCount;
+    private int playerCount;
     private final int playersLimit;
     private final int me;
-    private List<Room> rooms;
 
     public Room(String id, int playerCount, int playersLimit, int me) {
         this.id = id;
@@ -28,5 +27,13 @@ public class Room {
 
     public int getMe() {
         return me;
+    }
+
+    public void incrementPlayerCount() {
+        playerCount++;
+    }
+
+    public void decrementPlayerCount() {
+        playerCount--;
     }
 }

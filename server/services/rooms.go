@@ -21,7 +21,7 @@ func (rs *RoomsService) CreateAndJoin(context.Context, *emptypb.Empty) (*pb.Room
 
 	out := &pb.RoomDataReply{
 		Id:           room.Id.String(),
-		Players:      []*pb.PlayerInRoomData{},
+		Players:      []*pb.PlayerInRoomData{{Number: int32(player.Number)}},
 		PlayersLimit: int32(playersLimit),
 		Me:           &pb.PlayerInRoomData{Number: int32(player.Number)},
 	}

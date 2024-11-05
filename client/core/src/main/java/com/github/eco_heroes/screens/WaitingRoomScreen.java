@@ -15,11 +15,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eco_heroes.Main;
 import com.github.eco_heroes.ServerUrl;
 import com.github.eco_heroes.grpc.GameEventsClient;
-import com.github.eco_heroes.grpc.RoomsClient;
 import com.github.eco_heroes.models.Player;
 import com.github.eco_heroes.models.Room;
-import com.github.eco_heroes.proto.rooms.RoomDataReply;
 import com.github.eco_heroes.proto.rooms.RoomsListReply;
+import com.github.eco_heroes.server_events.ServerEventsObservable;
 
 import java.util.ArrayList;
 
@@ -34,10 +33,10 @@ public class WaitingRoomScreen implements Screen {
     private boolean nameSet; // Flag to track if the name has been set
     private java.util.List<Room> rooms;
     private RoomsListReply reply;
-    private RoomDataReply roomData;
+    private Room roomData;
 
 
-    public WaitingRoomScreen(final Main game, RoomDataReply roomData) {
+    public WaitingRoomScreen(final Main game, Room roomData) {
         this.game = game;
         this.roomData = roomData;
 
@@ -50,6 +49,19 @@ public class WaitingRoomScreen implements Screen {
         players = new Array<>();
         nameSet = false; // Initialize the flag
 
+        ServerEventsObservable.addObserver(event -> {
+            switch (event.getEventCase()) {
+                case PLAYERADDEDEVT -> {
+                    if (!(event.getPlayerAddedEvt().getPlayerNumber() == roomData.getMe())) {
+                        roomData.incrementPlayerCount();
+                    }
+                }
+                case PLAYERREMOVEDEVT -> roomData.decrementPlayerCount();
+            }
+            updateUI();
+            System.out.println("Received server event: " + event);
+        });
+
         subscribeToGameEvents();
         setupUI();
     }
@@ -58,7 +70,7 @@ public class WaitingRoomScreen implements Screen {
     private void subscribeToGameEvents() {
         var gameEventsClient = GameEventsClient.getInstance(ServerUrl.HOST, ServerUrl.PORT);
 
-        gameEventsClient.subscribe(roomData.getId(), roomData.getMe().getNumber());
+        gameEventsClient.subscribe(roomData.getId(), roomData.getMe());
     }
 
 
@@ -81,11 +93,11 @@ public class WaitingRoomScreen implements Screen {
         listTitleLabel.setColor(Color.BLACK);
         table.add(listTitleLabel).spaceBottom(16);
 
-        var playersCount = roomData.getPlayersCount();
+        var playersCount = roomData.getPlayerCount();
         var playersList = new ArrayList<String>();
 
         for (var i = 1; i <= playersCount; i++) {
-            if (i == roomData.getMe().getNumber()) {
+            if (i == roomData.getMe()) {
                 playersList.add("Jugador " + i + " (Tú)");
             } else {
                 playersList.add("Jugador " + i);
