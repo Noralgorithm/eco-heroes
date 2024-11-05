@@ -23,6 +23,7 @@ import com.github.eco_heroes.actors.*;
 import com.github.eco_heroes.utils.WasteDisposer;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class GameScreen implements Screen {
@@ -36,6 +37,7 @@ public class GameScreen implements Screen {
     private Label myLivesLabel;
     private ArrayList<Label> playerLivesLabels = new ArrayList<>();
     private int changeScreen;
+    Table table = new Table();
 
     //textures
     Texture bottleTexture;
@@ -174,7 +176,7 @@ public class GameScreen implements Screen {
     }
 
     private void setupUI(){
-        Table table = new Table();
+
         table.setFillParent(true);
         table.bottom();
         stage.addActor(table);
@@ -194,13 +196,16 @@ public class GameScreen implements Screen {
 
         //others players
          // No cuenta el jugador actual
-        for (int i = 1; i < room.getPlayerCount(); i++) {
-            if ((i-1) != room.getMe()) {
-                playerLivesLabels.add(new Label("P" + i + ": " + GameState.getInstance().getLives(i), skin));
-                playerLivesLabels.get(i-1).setColor(Color.BLACK);
-                playerLivesLabels.get(i-1).setFontScale(0.7f);
-                playerLivesLabels.get(i-1).setAlignment(Align.center);
-                table.add(playerLivesLabels.get(i-1)).growX();
+
+        var playersLives = GameState.getInstance().getAllPlayersLives();
+
+        for (Map.Entry<Integer, Integer> entry : playersLives.entrySet()) {
+            if (entry.getKey() != room.getMe()) {
+                playerLivesLabels.add(new Label("P" + entry.getKey() + ": " + entry.getValue(), skin));
+                playerLivesLabels.getLast().setColor(Color.BLACK);
+                playerLivesLabels.getLast().setFontScale(0.7f);
+                playerLivesLabels.getLast().setAlignment(Align.center);
+                table.add(playerLivesLabels.getLast()).growX();
             }
         }
     }
@@ -395,11 +400,36 @@ public class GameScreen implements Screen {
     }
 
     private void updateUI() {
-        myLivesLabel.setText("Yo: " + GameState.getInstance().getLives(room.getMe()));
+        var playersLives = GameState.getInstance().getAllPlayersLives();
+        playerLivesLabels.clear();
+        table.clear();
 
-        for (int i = 1; i <= room.getPlayerCount() -1; i++) {
-            if ((i-1) != room.getMe()) {
-                playerLivesLabels.get(i-1).setText("P" + i + ": "+ GameState.getInstance().getLives(i));
+        table.setFillParent(true);
+        table.bottom();
+        stage.addActor(table);
+
+        Label livesLabel = new Label("Vidas", skin);
+        livesLabel.setColor(Color.BLACK);
+        livesLabel.setAlignment(Align.center);
+        table.add(livesLabel).growX().colspan(4).spaceBottom(5);
+
+        //my lives
+        table.row().padBottom(5);
+        myLivesLabel = new Label("Yo: " + GameState.getInstance().getLives(room.getMe()), skin);
+        myLivesLabel.setColor(Color.BLACK);
+        myLivesLabel.setFontScale(0.7f);
+        myLivesLabel.setAlignment(Align.center);
+        table.add(myLivesLabel).growX();
+
+        //others players
+        // No cuenta el jugador actual
+        for (Map.Entry<Integer, Integer> entry : playersLives.entrySet()) {
+            if (entry.getKey() != room.getMe()) {
+                playerLivesLabels.add(new Label("P" + entry.getKey() + ": " + entry.getValue(), skin));
+                playerLivesLabels.getLast().setColor(Color.BLACK);
+                playerLivesLabels.getLast().setFontScale(0.7f);
+                playerLivesLabels.getLast().setAlignment(Align.center);
+                table.add(playerLivesLabels.getLast()).growX();
             }
         }
     }

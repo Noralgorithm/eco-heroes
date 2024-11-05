@@ -28,6 +28,8 @@ public class GameState {
         return playersLives.get(playerNumber);
     }
 
+    public Map<Integer, Integer> getAllPlayersLives() {return playersLives;}
+
     public void loseLife(int playerNumber) {
         var newPlayerLives = playersLives.get(playerNumber) - 1;
         playersLives.put(playerNumber, newPlayerLives);
