@@ -41,11 +41,6 @@ public class AnimatedTile {
     public void draw(SpriteBatch batch, float x, float y) {
         batch.draw(animation.getKeyFrame(stateTime, true), x, y, 64, 64);
 
-        /*TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
-
-        // Draw the current frame with scaling
-        batch.draw(currentFrame, x, y, currentFrame.getRegionWidth() * scaleX, currentFrame.getRegionHeight() * scaleY);*/
-
     }
 
     public void dispose() {

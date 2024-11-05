@@ -83,7 +83,6 @@ public class WaitingRoomScreen implements Screen {
     private void setupUI() {
         Table table = new Table();
         table.pad(16);
-        table.setDebug(true);
         table.setFillParent(true);
         stage.addActor(table);
 

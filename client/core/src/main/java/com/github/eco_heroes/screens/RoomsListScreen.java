@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,6 +20,7 @@ import com.github.eco_heroes.models.Room;
 import com.github.eco_heroes.proto.rooms.PlayerInRoomData;
 import com.github.eco_heroes.proto.rooms.RoomDataReply;
 import com.github.eco_heroes.proto.rooms.RoomsListReply;
+import com.github.eco_heroes.utils.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +31,14 @@ public class RoomsListScreen implements Screen {
     private Skin skin;
     private List<Room> rooms;
     private RoomsListReply roomsListReply;
+    Texture backgroundTexture;
 
     public RoomsListScreen(Main game) {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         this.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        backgroundTexture = new Texture("menu_bg_3.png");
 
         this.rooms = new ArrayList<>();
 
@@ -60,28 +64,32 @@ public class RoomsListScreen implements Screen {
 
     private void setupUI() {
         Table table = new Table();
+        //table.setDebug(true);
         table.setFillParent(true);
         stage.addActor(table);
 
         // Title
-        table.pad(16);
+        //table.pad(16);
         Label titleLabel = new Label("Salas de Juego Actuales", skin);
         titleLabel.setColor(Color.BLACK);
         titleLabel.setAlignment(Align.center);
-        table.add(titleLabel).growX().colspan(3).spaceBottom(64);
+        //titleLabel.setFontScale(1f);
+        table.add(titleLabel).growX().colspan(3);
 
         // Display rooms
         for (Room room : rooms) {
-            table.row().padBottom(16);
+            table.row().padBottom(8);
             table.defaults().growX();
             Label nameLabel = new Label("Sala " + room.getId(), skin);
             nameLabel.setColor(Color.BLACK);
+            nameLabel.setFontScale(0.6f);
             table.add(nameLabel);
             Label playerCount = new Label("Jugadores: " + room.getPlayerCount() + "/" + room.getPlayersLimit(), skin);
             playerCount.setColor(Color.BLACK);
+            playerCount.setFontScale(0.6f);
             table.add(playerCount);
 
-            TextButton joinButton = new TextButton("Ver", skin);
+            TextButton joinButton = new TextButton("Unirse", skin);
             joinButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -100,7 +108,7 @@ public class RoomsListScreen implements Screen {
             }
         });
         table.row();
-        table.add(createRoomButton).colspan(3).spaceTop(64);
+        table.add(createRoomButton).colspan(3);
     }
 
     private void createNewRoom() {
@@ -124,6 +132,10 @@ public class RoomsListScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        game.batch.begin();
+        game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        game.batch.end();
+
         stage.act(delta);
         stage.draw();
     }

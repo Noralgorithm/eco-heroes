@@ -24,7 +24,7 @@ public class MainMenuScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
-        backgroundTexture = new Texture("background.png");
+        backgroundTexture = new Texture("bg1.png");
         //titleFont = new BitmapFont();
         /*titleFont.getData().setScale(1.5f);
         titleFont.setColor(Color.RED);*/
@@ -47,9 +47,6 @@ public class MainMenuScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //titleFont.draw(game.batch, "EcoHeroes", 100, 150);
-        game.font.draw(game.batch, "EcoHeroes", (float) Gdx.graphics.getWidth() /2 - 30, 400);
-        game.font.draw(game.batch, "Empieza a reciclar!", 100, 100);
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
